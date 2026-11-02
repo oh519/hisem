@@ -177,9 +177,15 @@ b, strong { font-weight: 500; }
 .wafer-wrap { max-width: 400px; width: 100%; justify-self: center; }
 .wafer-wrap svg { display: block; width: 100%; height: auto; filter: drop-shadow(0 24px 40px rgba(14, 30, 63, .12)) drop-shadow(0 2px 6px rgba(14, 30, 63, .06)); }
 .wafer-cap { font-family: var(--mono); font-weight: 300; font-size: 11px; color: var(--muted); letter-spacing: .08em; display: flex; justify-content: space-between; margin-top: 10px; gap: 12px; }
-.die { fill: var(--tint); stroke: var(--line); stroke-width: 1; transition: fill .6s ease; }
-.die.lit { fill: var(--ice); }
-.die.hot { fill: var(--navy); }
+#device { overflow: visible; animation: float 7s ease-in-out infinite; }
+#device polygon { stroke: rgba(14, 30, 63, .32); stroke-width: .8; stroke-linejoin: round; }
+#device .lbl { font-family: var(--mono); font-size: 15px; font-weight: 400; letter-spacing: .1em; fill: var(--navy); text-anchor: middle; }
+#device .fin .top { animation: flow 2.6s ease-in-out infinite; }
+#device .gate .top { animation: gate 2.6s ease-in-out infinite; }
+@keyframes float { 0%, 100% { transform: translateY(0); } 50% { transform: translateY(-8px); } }
+@keyframes flow { 0%, 100% { fill: #9FDCF7; } 50% { fill: #EAF9FF; } }
+@keyframes gate { 0%, 100% { fill: #2B4278; } 50% { fill: #3D5A9A; } }
+@media (prefers-reduced-motion: reduce) { #device, #device .fin .top, #device .gate .top { animation: none; } }
 .quick { display: grid; grid-template-columns: repeat(4, minmax(0, 1fr)); border-left: 1px solid var(--line); }
 .quick a { display: flex; flex-direction: column; gap: 4px; padding: 26px 24px; border-right: 1px solid var(--line); text-decoration: none; min-width: 0; }
 .quick a:hover { background: var(--tint); }
@@ -296,13 +302,8 @@ footer { border-top: 1px solid var(--line); padding-block: 36px; }
           </div>
         </div>
         <div class="wafer-wrap">
-          <svg viewBox="0 0 400 400" role="img" aria-label="다이 격자가 그려진 웨이퍼 일러스트">
-            <defs><clipPath id="wclip"><path d="M128 386A190 190 0 1 1 272 386Z"/></clipPath></defs>
-            <path d="M128 386A190 190 0 1 1 272 386Z" fill="#FFFFFF"/>
-            <g id="dies" clip-path="url(#wclip)"></g>
-            <path d="M128 386A190 190 0 1 1 272 386Z" fill="none" stroke="#0E1E3F" stroke-width="1.5"/>
-          </svg>
-          <div class="wafer-cap"><span>Si (100) · Ø300 mm</span><span id="die-count">— dies</span></div>
+          <svg id="device" viewBox="0 0 400 400" role="img" aria-label="소스, 게이트, 드레인과 세 개의 핀으로 이루어진 3D FinFET 트랜지스터 일러스트"></svg>
+          <div class="wafer-cap"><span>FinFET · Tri-gate</span><span>Source → Drain</span></div>
         </div>
       </div>
     </div>
@@ -550,28 +551,55 @@ footer { border-top: 1px solid var(--line); padding-block: 36px; }
   window.addEventListener('hashchange', route);
   route();
 
-  // Wafer die map
-  var g = document.getElementById('dies');
+  // 3D FinFET (isometric, drawn back to front)
+  var svg = document.getElementById('device');
   var NS = 'http://www.w3.org/2000/svg';
-  var size = 26, gap = 4, step = size + gap, cx = 200, cy = 200, r = 186, dies = [];
-  for (var y = cy - 7 * step + gap / 2; y < cy + 7 * step; y += step) {
-    for (var x = cx - 7 * step + gap / 2; x < cx + 7 * step; x += step) {
-      var c = [[x, y], [x + size, y], [x, y + size], [x + size, y + size]];
-      if (!c.every(function (p) { return Math.hypot(p[0] - cx, p[1] - cy) < r && p[1] < 380; })) continue;
-      var rect = document.createElementNS(NS, 'rect');
-      rect.setAttribute('x', x); rect.setAttribute('y', y);
-      rect.setAttribute('width', size); rect.setAttribute('height', size); rect.setAttribute('rx', 2);
-      rect.setAttribute('class', 'die');
-      g.appendChild(rect); dies.push(rect);
-    }
+  var S = 24, CX = Math.cos(Math.PI / 6) * S, CY = S / 2, pts = [];
+  function P(x, y, z) {
+    var X = (x - y) * CX, Y = (x + y) * CY - z * S;
+    pts.push([X, Y]); return X.toFixed(1) + ',' + Y.toFixed(1);
   }
-  document.getElementById('die-count').textContent = dies.length + ' dies';
-  [0.18, 0.33, 0.47, 0.71, 0.86].forEach(function (s) { dies[Math.floor(s * dies.length)].classList.add('lit'); });
-  dies[Math.floor(0.5 * dies.length)].classList.add('hot');
-  var reduce = window.matchMedia && window.matchMedia('(prefers-reduced-motion: reduce)').matches;
-  if (!reduce) setInterval(function () {
-    var d = dies[Math.floor(Math.random() * dies.length)];
-    if (!d.classList.contains('hot')) d.classList.toggle('lit');
-  }, 450);
+  function el(tag, parent) { var e = document.createElementNS(NS, tag); parent.appendChild(e); return e; }
+  function face(g, a, fill, cls) {
+    var p = el('polygon', g); p.setAttribute('points', a.join(' ')); p.setAttribute('fill', fill);
+    if (cls) p.setAttribute('class', cls);
+  }
+  // col = [top, +y face, +x face]
+  function box(x0, x1, y0, y1, z0, z1, col, cls, delay) {
+    var g = el('g', svg); if (cls) g.setAttribute('class', cls);
+    face(g, [P(x0, y1, z0), P(x1, y1, z0), P(x1, y1, z1), P(x0, y1, z1)], col[1]);
+    face(g, [P(x1, y0, z0), P(x1, y1, z0), P(x1, y1, z1), P(x1, y0, z1)], col[2]);
+    face(g, [P(x0, y0, z1), P(x1, y0, z1), P(x1, y1, z1), P(x0, y1, z1)], col[0], 'top');
+    if (delay != null) g.querySelector('.top').style.animationDelay = delay + 's';
+  }
+  var SI = ['#EEF2F8', '#D3DCE8', '#BCC8D9'], OX = ['#F8FBFE', '#E3EBF4', '#D2DDEA'],
+      FIN = ['#9FDCF7', '#6FC4EC', '#4FA8D6'], GATE = ['#2B4278', '#0E1E3F', '#18295A'],
+      SP = ['#E6ECF4', '#C9D4E3', '#B4C2D6'], MET = ['#FFFFFF', '#DCE4EE', '#C4D0DF'], PAD = ['#3A5390', '#1B2D5C', '#24396B'];
+  var FINS = [[1.2, 1.7], [2.65, 3.15], [4.1, 4.6]], FT = 2.2;
+  function via(x, zb, label) {
+    box(x - .25, x + .25, 2.65, 3.15, zb, 4.6, MET);
+    box(x - .7, x + .7, 2.2, 3.6, 4.6, 4.9, PAD);
+    labels.push([x, label]);
+  }
+  var labels = [];
+  box(0, 10, 0, 6, -1.4, 0, SI);                    // Si substrate
+  box(0, 10, 0, 6, 0, .5, OX);                      // STI oxide
+  FINS.forEach(function (f, i) { box(.6, 3.7, f[0], f[1], .5, FT, FIN, 'fin', i * .15); });
+  box(1.3, 2.9, 1, 4.8, FT, FT + .35, MET);         // source contact
+  via(2.1, FT + .35, 'S');
+  box(3.7, 4, .8, 5, .5, 3, SP);                    // spacer
+  box(4, 6, .8, 5, .5, 3.2, GATE, 'gate');          // metal gate wrapping the fins
+  box(6, 6.3, .8, 5, .5, 3, SP);
+  via(5, 3.2, 'G');
+  FINS.forEach(function (f, i) { box(6.3, 9.4, f[0], f[1], .5, FT, FIN, 'fin', .9 + i * .15); });
+  box(7.1, 8.7, 1, 4.8, FT, FT + .35, MET);         // drain contact
+  via(7.9, FT + .35, 'D');
+  labels.forEach(function (l) {
+    var t = el('text', svg), q = P(l[0], 2.9, 4.9).split(',');
+    t.setAttribute('x', q[0]); t.setAttribute('y', q[1] - 16); t.setAttribute('class', 'lbl'); t.textContent = l[1];
+  });
+  var xs = pts.map(function (p) { return p[0]; }), ys = pts.map(function (p) { return p[1]; });
+  var minX = Math.min.apply(0, xs) - 12, minY = Math.min.apply(0, ys) - 36;
+  svg.setAttribute('viewBox', [minX, minY, Math.max.apply(0, xs) + 12 - minX, Math.max.apply(0, ys) + 12 - minY].map(Math.round).join(' '));
 })();
 </script>
