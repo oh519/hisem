@@ -240,8 +240,6 @@ b, strong { font-weight: 500; }
 .avatar { width: 44px; height: 44px; border-radius: 50%; background: var(--ice-soft); color: var(--navy); display: grid; place-items: center; font-family: var(--body); font-size: 17px; font-weight: 500; margin-bottom: 4px; }
 .person b { font-size: 15px; color: var(--navy); font-weight: 500; }
 .person span { font-size: 13px; color: var(--muted); }
-.person .mail { margin-top: 4px; font-family: var(--mono); font-size: 12px; color: var(--navy-2); text-decoration: none; overflow-wrap: break-word; }
-.person .mail:hover { text-decoration: underline; }
 
 /* Join */
 .join { background: var(--navy); color: #fff; border-radius: 16px; padding: 40px 36px; display: grid; grid-template-columns: minmax(0, 1fr) auto; gap: 28px; align-items: center; }
@@ -256,6 +254,8 @@ b, strong { font-weight: 500; }
 .contact-item dt { font-family: var(--mono); font-weight: 300; font-size: 11px; letter-spacing: .1em; text-transform: uppercase; color: var(--muted); margin-bottom: 6px; }
 .contact-item dd { margin: 0; font-size: 15px; color: var(--ink); overflow-wrap: anywhere; }
 .contact-item dd.empty { color: var(--muted); }
+.contact-item dd a { color: var(--navy); text-decoration: none; border-bottom: 1px solid var(--ice); }
+.contact-item dd a:hover { border-bottom-color: var(--navy); }
 @media (max-width: 720px) { .contact-grid { grid-template-columns: 1fr; } }
 
 footer { border-top: 1px solid var(--line); padding-block: 36px; }
@@ -410,7 +410,7 @@ footer { border-top: 1px solid var(--line); padding-block: 36px; }
       <p class="lead">HISEM과 함께 공부하는 멤버들입니다.</p>
       <div class="people">
         <div class="person"><div class="avatar" aria-hidden="true">박</div><b>박다운</b><span>신소재공학과</span></div>
-        <div class="person"><div class="avatar" aria-hidden="true">오</div><b>오원규</b><span>신소재공학과</span><a class="mail" href="mailto:wongyuoh@g.hongik.ac.kr">wongyuoh@<wbr>g.hongik.ac.kr</a></div>
+        <div class="person"><div class="avatar" aria-hidden="true">오</div><b>오원규</b><span>신소재공학과</span></div>
         <div class="person"><div class="avatar" aria-hidden="true">김</div><b>김재형</b><span>신소재공학과</span></div>
         <div class="person"><div class="avatar" aria-hidden="true">이</div><b>이승현</b><span>신소재공학과</span></div>
         <div class="person"><div class="avatar" aria-hidden="true">김</div><b>김민희</b><span>신소재공학과</span></div>
@@ -455,7 +455,7 @@ footer { border-top: 1px solid var(--line); padding-block: 36px; }
   <section class="view" data-view="contact" hidden>
     <div class="page-body"><div class="wrap">
       <dl class="contact-grid">
-        <div class="contact-item"><dt>Email</dt><dd class="empty">추후 공개</dd></div>
+        <div class="contact-item"><dt>Email</dt><dd><a href="mailto:wongyuoh@g.hongik.ac.kr">wongyuoh@g.hongik.ac.kr</a></dd></div>
         <div class="contact-item"><dt>Instagram</dt><dd class="empty">추후 공개</dd></div>
         <div class="contact-item"><dt>Address</dt><dd>서울특별시 마포구 와우산로 94<br>홍익대학교 신소재공학과</dd></div>
       </dl>
