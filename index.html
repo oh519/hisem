@@ -186,7 +186,7 @@ b, strong { font-weight: 500; }
 .quick a:hover { background: var(--tint); }
 .quick .k { font-family: var(--mono); font-weight: 300; font-size: 11px; letter-spacing: .12em; text-transform: uppercase; color: var(--muted); }
 .quick .v { font-family: var(--display); font-weight: 400; font-stretch: 92%; font-size: 19px; color: var(--navy); }
-.quick .v::after { content: " →"; color: var(--ice); }
+.quick .v::after { content: "\00a0→"; color: var(--ice); }
 @media (max-width: 860px) {
   .hero-grid { grid-template-columns: 1fr; padding-block: 52px 44px; gap: 36px; }
   .wafer-wrap { max-width: 420px; }
@@ -203,6 +203,8 @@ b, strong { font-weight: 500; }
   .quick { grid-template-columns: repeat(2, minmax(0, 1fr)); border-left: 0; }
   .quick a { border-bottom: 1px solid var(--line); }
   .quick a:nth-child(2n) { border-right: 0; }
+  .quick a { padding: 22px 18px; }
+  .quick .v { font-size: 17px; line-height: 1.4; }
 }
 
 /* Facts */
@@ -306,10 +308,10 @@ footer { border-top: 1px solid var(--line); padding-block: 36px; }
     </div>
     <div class="wrap">
       <nav class="quick" aria-label="바로가기">
-        <a href="#activity"><span class="k">Archive</span><span class="v">활동내용</span></a>
+        <a href="#activity"><span class="k">Archive</span><span class="v">Activity Log</span></a>
         <a href="#publication"><span class="k">Archive</span><span class="v">Publication</span></a>
-        <a href="#contest"><span class="k">Archive</span><span class="v">공모전</span></a>
-        <a href="#external"><span class="k">Archive</span><span class="v">대외활동</span></a>
+        <a href="#contest"><span class="k">Archive</span><span class="v">Competitions</span></a>
+        <a href="#external"><span class="k">Archive</span><span class="v">External Activities</span></a>
       </nav>
     </div>
   </section>
@@ -482,7 +484,7 @@ footer { border-top: 1px solid var(--line); padding-block: 36px; }
   var SITE = [
     { label: 'About', items: [['introduction', 'Introduction'], ['professor', 'Professor']] },
     { label: 'Activities', items: [['curriculum', 'Curriculum']] },
-    { label: 'Archive', items: [['activity', '활동내용'], ['publication', 'Publication'], ['contest', '공모전'], ['external', '대외활동']] },
+    { label: 'Archive', items: [['activity', 'Activity Log'], ['publication', 'Publication'], ['contest', 'Competitions'], ['external', 'External Activities']] },
     { label: 'Members', items: [['member', 'Member'], ['alumni', 'Alumni']] },
     { label: 'Join Us', items: [['recruitment', 'Recruitment'], ['contact', 'Contact']] }
   ];
