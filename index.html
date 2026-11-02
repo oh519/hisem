@@ -1,3 +1,7 @@
+<!doctype html>
+<html lang="ko">
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
 <title>HISEM</title>
 <meta name="claude:viewport-fit-sides" content="cover">
 <meta name="description" content="HISEM · 홍익대학교 신소재공학과 반도체 학술 동아리">
@@ -181,12 +185,6 @@ b, strong { font-weight: 500; }
 .chip.active .chip-hint { opacity: 0; }
 .wafer-cap { font-family: var(--mono); font-weight: 300; font-size: 11px; color: var(--muted); letter-spacing: .08em; display: flex; justify-content: space-between; margin-top: 10px; gap: 12px; }
 #chip-layer { color: var(--navy); transition: color .2s ease; }
-.quick { display: grid; grid-template-columns: repeat(4, minmax(0, 1fr)); border-left: 1px solid var(--line); }
-.quick a { display: flex; flex-direction: column; gap: 4px; padding: 26px 24px; border-right: 1px solid var(--line); text-decoration: none; min-width: 0; }
-.quick a:hover { background: var(--tint); }
-.quick .k { font-family: var(--mono); font-weight: 300; font-size: 11px; letter-spacing: .12em; text-transform: uppercase; color: var(--muted); }
-.quick .v { font-family: var(--display); font-weight: 400; font-stretch: 92%; font-size: 19px; color: var(--navy); }
-.quick .v::after { content: "\00a0→"; color: var(--ice); }
 @media (max-width: 860px) {
   .hero-grid { grid-template-columns: 1fr; padding-block: 52px 44px; gap: 36px; }
   .wafer-wrap { max-width: 420px; }
@@ -200,11 +198,6 @@ b, strong { font-weight: 500; }
             mask-image: radial-gradient(ellipse 90% 60% at 50% 75%, #000 10%, transparent 75%);
   }
   .hero::after { width: 640px; height: 640px; left: 50%; top: 76%; }
-  .quick { grid-template-columns: repeat(2, minmax(0, 1fr)); border-left: 0; }
-  .quick a { border-bottom: 1px solid var(--line); }
-  .quick a:nth-child(2n) { border-right: 0; }
-  .quick a { padding: 22px 18px; }
-  .quick .v { font-size: 17px; line-height: 1.4; }
 }
 
 /* Facts */
@@ -235,6 +228,62 @@ b, strong { font-weight: 500; }
 .card p { margin: 0; font-size: 14px; color: var(--muted); }
 .sample-badge { font-family: var(--mono); font-weight: 400; font-size: 10px; letter-spacing: .12em; text-transform: uppercase; color: var(--navy-2); }
 .card .foot { margin-top: auto; padding-top: 8px; border-top: 1px solid var(--line); font-size: 13px; color: var(--muted); display: flex; justify-content: space-between; gap: 8px; }
+
+/* Home: sections below the hero */
+.stats-band { border-bottom: 1px solid var(--line); }
+.stats { display: grid; grid-template-columns: repeat(4, minmax(0, 1fr)); }
+.stat { display: flex; flex-direction: column; gap: 4px; padding: 30px 24px; border-right: 1px solid var(--line); min-width: 0; }
+.stat:first-child { border-left: 1px solid var(--line); }
+.stat b { font-family: var(--display); font-weight: 300; font-stretch: 88%; font-size: clamp(30px, 3.6vw, 44px); line-height: 1.05; color: var(--navy); font-variant-numeric: tabular-nums; }
+.stat span { font-family: var(--mono); font-weight: 300; font-size: 11px; letter-spacing: .12em; text-transform: uppercase; color: var(--muted); }
+.home-sec { padding-top: 96px; }
+.home-sec.last { padding-bottom: 104px; }
+.sec-head { display: grid; grid-template-columns: minmax(0, 1fr) auto; align-items: end; gap: 14px 24px; margin-bottom: 36px; }
+.sec-no { grid-column: 1 / -1; margin: 0; font-family: var(--mono); font-weight: 300; font-size: 12px; letter-spacing: .14em; text-transform: uppercase; color: var(--muted); }
+.sec-no::before { content: ""; display: inline-block; width: 18px; height: 2px; background: var(--ice); vertical-align: 4px; margin-right: 10px; }
+.sec-head h2 { margin: 0; font-family: var(--display); font-weight: 300; font-stretch: 90%; font-size: clamp(28px, 3.8vw, 44px); line-height: 1.18; letter-spacing: -.01em; color: var(--navy); text-wrap: balance; }
+.sec-more { font-size: 14px; color: var(--navy); text-decoration: none; border-bottom: 1px solid var(--ice); padding-bottom: 2px; white-space: nowrap; }
+.sec-more:hover { border-bottom-color: var(--navy); }
+.sec-note { margin: 0; font-family: var(--mono); font-size: 11.5px; letter-spacing: .06em; color: var(--muted); white-space: nowrap; }
+.tracks { display: grid; grid-template-columns: repeat(4, minmax(0, 1fr)); gap: 16px; }
+.track { position: relative; display: flex; flex-direction: column; gap: 10px; padding: 26px 22px 22px; border: 1px solid var(--line); border-radius: 14px; background: var(--bg); color: inherit; text-decoration: none; min-width: 0; transition: border-color .25s ease, transform .25s ease, box-shadow .25s ease, opacity .7s ease; }
+.track:hover { border-color: var(--navy); transform: translateY(-3px); box-shadow: 0 14px 30px rgba(14, 30, 63, .08); }
+.t-no { position: absolute; top: 24px; right: 22px; font-family: var(--mono); font-size: 12px; color: #A9B4C5; }
+.track svg { width: 36px; height: 36px; color: var(--navy); margin-bottom: 8px; }
+.track h3 { margin: 0; font-family: var(--display); font-weight: 400; font-stretch: 95%; font-size: 19px; line-height: 1.3; color: var(--navy); }
+.track p { margin: 0; font-size: 14px; line-height: 1.7; color: var(--muted); }
+.t-tags { margin-top: auto; padding-top: 12px; font-family: var(--mono); font-size: 11px; letter-spacing: .04em; color: var(--navy-2); }
+.news { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 16px; }
+.news-item { display: flex; flex-direction: column; gap: 12px; padding: 24px 22px 22px; border-top: 2px solid var(--navy); border-radius: 0 0 12px 12px; background: var(--tint); color: inherit; text-decoration: none; min-width: 0; transition: background .2s ease, opacity .7s ease, transform .7s ease; }
+.news-item:hover { background: var(--ice-soft); }
+.n-meta { font-family: var(--mono); font-weight: 300; font-size: 11.5px; letter-spacing: .06em; color: var(--muted); }
+.n-meta b { font-weight: 400; color: var(--navy-2); }
+.news-item h3 { margin: 0; font-size: 16.5px; line-height: 1.55; font-weight: 500; color: var(--ink); display: -webkit-box; -webkit-line-clamp: 3; -webkit-box-orient: vertical; overflow: hidden; }
+.n-go { margin-top: auto; font-size: 13px; color: var(--navy); }
+.news-src { margin: 16px 0 0; font-size: 12.5px; color: var(--muted); }
+.join-home .sec-no { color: #9FB4D9; margin-bottom: 14px; }
+.join-home .btns { justify-content: flex-end; }
+.join-home .btn { cursor: pointer; }
+.join-home .btn.line { background: transparent; color: #fff; border-color: rgba(255, 255, 255, .4); }
+.join-home .btn.line:hover { border-color: #fff; }
+.reveal { transition: opacity .7s ease, transform .7s ease; }
+.reveal.pre { opacity: 0; transform: translateY(18px); }
+@media (max-width: 960px) {
+  .tracks { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+  .news { grid-template-columns: 1fr; }
+}
+@media (max-width: 720px) {
+  .stats { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+  .stat { padding: 22px 18px; }
+  .stat:nth-child(odd) { border-left: 1px solid var(--line); }
+  .stat:nth-child(-n+2) { border-bottom: 1px solid var(--line); }
+  .home-sec { padding-top: 68px; }
+  .home-sec.last { padding-bottom: 72px; }
+  .sec-head { grid-template-columns: 1fr; margin-bottom: 26px; }
+  .join-home .btns { justify-content: flex-start; }
+}
+@media (max-width: 560px) { .tracks { grid-template-columns: 1fr; } }
+@media (prefers-reduced-motion: reduce) { .reveal, .track, .news-item { transition: none; } }
 
 /* People */
 .people { display: grid; grid-template-columns: repeat(auto-fill, minmax(160px, 1fr)); gap: 12px; }
@@ -306,13 +355,57 @@ footer { border-top: 1px solid var(--line); padding-block: 36px; }
         </div>
       </div>
     </div>
-    <div class="wrap">
-      <nav class="quick" aria-label="바로가기">
-        <a href="#activity"><span class="k">Archive</span><span class="v">Activities</span></a>
-        <a href="#publication"><span class="k">Archive</span><span class="v">Publication</span></a>
-        <a href="#contest"><span class="k">Archive</span><span class="v">Competitions</span></a>
-        <a href="#external"><span class="k">Archive</span><span class="v">External Activities</span></a>
-      </nav>
+    <div class="stats-band">
+      <div class="wrap stats">
+        <div class="stat"><b data-count="2026" data-from="2000">2026</b><span>Founded</span></div>
+        <div class="stat"><b data-count="12">12</b><span>Members</span></div>
+        <div class="stat"><b data-count="4">4</b><span>Study Tracks</span></div>
+        <div class="stat"><b>MSE</b><span>Hongik Univ.</span></div>
+      </div>
+    </div>
+
+    <div class="home-sec">
+      <div class="wrap">
+        <div class="sec-head reveal">
+          <p class="sec-no">01 / What We Study</p>
+          <h2>소재에서 출발해<br>칩까지 공부합니다</h2>
+          <a class="sec-more" href="#curriculum">Curriculum →</a>
+        </div>
+        <div class="tracks">
+        <a class="track reveal" href="#curriculum"><span class="t-no">01</span><svg viewBox="0 0 36 36" fill="none" stroke="currentColor" stroke-width="1.4" aria-hidden="true"><path d="M6 12l12-6 12 6-12 6z"/><path d="M6 12v12l12 6 12-6V12"/><path d="M18 18v12"/><circle cx="18" cy="6" r="1.6" fill="currentColor"/><circle cx="6" cy="12" r="1.6" fill="currentColor"/><circle cx="30" cy="12" r="1.6" fill="currentColor"/><circle cx="18" cy="18" r="1.6" fill="currentColor"/></svg><h3>Materials &amp; Physics</h3><p>결정 구조, 에너지 밴드, 도핑처럼 반도체를 이루는 소재와 물성의 기초를 다집니다.</p><span class="t-tags">Crystal · Band Gap · Doping</span></a>
+        <a class="track reveal" href="#curriculum"><span class="t-no">02</span><svg viewBox="0 0 36 36" fill="none" stroke="currentColor" stroke-width="1.4" aria-hidden="true"><path d="M5 26l13 6 13-6"/><path d="M5 20l13 6 13-6"/><path d="M5 14l13 6 13-6-13-6z"/><path d="M18 2v6M15 5l3 3 3-3"/></svg><h3>Process</h3><p>산화, 포토, 식각, 증착부터 금속 배선과 패키징까지 칩이 만들어지는 8대 공정을 따라갑니다.</p><span class="t-tags">Litho · Etch · Deposition</span></a>
+        <a class="track reveal" href="#curriculum"><span class="t-no">03</span><svg viewBox="0 0 36 36" fill="none" stroke="currentColor" stroke-width="1.4" aria-hidden="true"><rect x="4" y="22" width="28" height="8" rx="1"/><rect x="13" y="10" width="10" height="12" rx="1"/><path d="M8 22v-6M28 22v-6M18 10V5"/><path d="M8 16h-2M28 16h2"/></svg><h3>Devices</h3><p>MOSFET에서 FinFET, GAA까지 트랜지스터 구조와 DRAM, NAND 메모리의 동작 원리를 공부합니다.</p><span class="t-tags">MOSFET · FinFET · Memory</span></a>
+        <a class="track reveal" href="#curriculum"><span class="t-no">04</span><svg viewBox="0 0 36 36" fill="none" stroke="currentColor" stroke-width="1.4" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M4 30h28"/><path d="M6 25l7-7 6 4 11-12"/><path d="M24 10h6v6"/></svg><h3>Industry &amp; Trends</h3><p>HBM, 첨단 패키징, 차세대 소재 등 산업의 흐름을 읽고 소재 관점에서 정리합니다.</p><span class="t-tags">HBM · Packaging · Roadmap</span></a>
+        </div>
+      </div>
+    </div>
+
+    <div class="home-sec" id="news-sec" hidden>
+      <div class="wrap">
+        <div class="sec-head reveal">
+          <p class="sec-no">02 / Latest News</p>
+          <h2>반도체 산업 소식</h2>
+          <p class="sec-note" id="news-updated"></p>
+        </div>
+        <div class="news" id="news-list"></div>
+        <p class="news-src">반도체 전문지 기사를 매일 자동으로 모아 옵니다. 기사의 저작권은 각 언론사에 있습니다.</p>
+      </div>
+    </div>
+
+    <div class="home-sec last">
+      <div class="wrap">
+        <div class="join join-home reveal">
+          <div>
+            <p class="sec-no">Join HISEM</p>
+            <h3>함께 공부할 1기 멤버를 기다립니다</h3>
+            <p>모집 일정과 지원 방법은 확정되는 대로 공지합니다. 궁금한 점은 언제든 메일로 문의해 주세요.</p>
+          </div>
+          <div class="btns">
+            <a class="btn" href="#recruitment">모집 안내</a>
+            <a class="btn line" href="#contact">Contact</a>
+          </div>
+        </div>
+      </div>
     </div>
   </section>
 
@@ -558,6 +651,68 @@ footer { border-top: 1px solid var(--line); padding-block: 36px; }
   window.addEventListener('hashchange', route);
   route();
 
+})();
+</script>
+<script>
+// Home: reveal on scroll, count-up stats, latest news from news.json
+(function () {
+  var reduce = window.matchMedia && window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+  var io = (!reduce && 'IntersectionObserver' in window) ? new IntersectionObserver(function (entries) {
+    entries.forEach(function (e) {
+      if (!e.isIntersecting) return;
+      e.target.classList.remove('pre'); io.unobserve(e.target);
+    });
+  }, { rootMargin: '0px 0px -8% 0px' }) : null;
+  function watch(el, delay) {
+    if (!io) return;
+    el.classList.add('pre'); if (delay) el.style.transitionDelay = delay + 'ms';
+    io.observe(el);
+  }
+  document.querySelectorAll('.reveal').forEach(function (el) {
+    var sibs = el.parentNode.querySelectorAll(':scope > .reveal');
+    watch(el, sibs.length > 1 ? Array.prototype.indexOf.call(sibs, el) * 90 : 0);
+  });
+  // clear the stagger once revealed so hover transitions stay snappy
+  document.addEventListener('transitionend', function (e) { if (e.target.classList && e.target.classList.contains('reveal')) e.target.style.transitionDelay = ''; });
+
+  var nums = document.querySelectorAll('[data-count]');
+  if (!reduce && 'IntersectionObserver' in window) {
+    var co = new IntersectionObserver(function (entries) {
+      entries.forEach(function (e) {
+        if (!e.isIntersecting) return;
+        co.unobserve(e.target);
+        var el = e.target, to = +el.dataset.count, from = +(el.dataset.from || 0), t0 = performance.now();
+        (function step(now) {
+          var p = Math.min(1, (now - t0) / 1200), k = 1 - Math.pow(1 - p, 3);
+          el.textContent = Math.round(from + (to - from) * k);
+          if (p < 1) requestAnimationFrame(step);
+        })(t0);
+      });
+    }, { threshold: .6 });
+    nums.forEach(function (n) { co.observe(n); });
+  }
+
+  var sec = document.getElementById('news-sec'), list = document.getElementById('news-list');
+  if (!sec || !window.fetch) return;
+  function fmt(iso) { var d = new Date(iso); return isNaN(d) ? '' : d.getFullYear() + '.' + ('0' + (d.getMonth() + 1)).slice(-2) + '.' + ('0' + d.getDate()).slice(-2); }
+  fetch('news.json', { cache: 'no-cache' }).then(function (r) { return r.ok ? r.json() : null; }).then(function (data) {
+    var items = data && data.items ? data.items.slice(0, 3) : [];
+    if (!items.length) return;
+    items.forEach(function (it, i) {
+      var a = document.createElement('a');
+      a.className = 'news-item reveal'; a.href = it.link; a.target = '_blank'; a.rel = 'noopener';
+      var meta = document.createElement('span'); meta.className = 'n-meta';
+      var src = document.createElement('b'); src.textContent = it.source || 'News';
+      meta.appendChild(src); meta.appendChild(document.createTextNode(' · ' + fmt(it.date)));
+      var h = document.createElement('h3'); h.textContent = it.title;
+      var go = document.createElement('span'); go.className = 'n-go'; go.textContent = '기사 보기 ↗';
+      a.appendChild(meta); a.appendChild(h); a.appendChild(go);
+      list.appendChild(a);
+      watch(a, i * 90);
+    });
+    if (data.updated) document.getElementById('news-updated').textContent = 'Updated ' + fmt(data.updated);
+    sec.hidden = false;
+  }).catch(function () {});
 })();
 </script>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js"></script>
