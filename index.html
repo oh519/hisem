@@ -176,7 +176,7 @@ b, strong { font-weight: 500; }
 .btn.ghost:hover { background: var(--tint); }
 .wafer-wrap { max-width: 480px; width: 100%; justify-self: center; }
 .chip { position: relative; width: 100%; aspect-ratio: 1 / 1; cursor: grab; touch-action: pan-y; }
-.chip canvas { display: block; width: 100% !important; height: 100% !important; }
+.chip canvas { display: block; width: 100% !important; height: 100% !important; filter: drop-shadow(0 26px 30px rgba(14, 30, 63, .16)); }
 .chip-hint { position: absolute; left: 50%; bottom: 4px; transform: translateX(-50%); font-family: var(--mono); font-size: 10.5px; letter-spacing: .14em; text-transform: uppercase; color: var(--muted); background: rgba(255, 255, 255, .7); padding: 3px 10px; border-radius: 999px; border: 1px solid var(--line); pointer-events: none; transition: opacity .4s ease; white-space: nowrap; }
 .chip.active .chip-hint { opacity: 0; }
 .wafer-cap { font-family: var(--mono); font-weight: 300; font-size: 11px; color: var(--muted); letter-spacing: .08em; display: flex; justify-content: space-between; margin-top: 10px; gap: 12px; }
@@ -297,8 +297,8 @@ footer { border-top: 1px solid var(--line); padding-block: 36px; }
           </div>
         </div>
         <div class="wafer-wrap">
-          <div class="chip" id="chip" role="img" aria-label="실리콘 기판, 트랜지스터 층, 다섯 층의 금속 배선, 범프로 이루어진 반도체 칩 단면 3D 모델. 마우스를 올리면 층이 분리됩니다."><span class="chip-hint">Hover · Explode</span></div>
-          <div class="wafer-cap"><span>Die Stack · FEOL + BEOL</span><span id="chip-layer">M1 – M5 Interconnect</span></div>
+          <div class="chip" id="chip" role="img" aria-label="회로 패턴이 새겨진 다이가 격자로 배열된 3D 실리콘 웨이퍼. 마우스를 올린 다이가 들려 올라옵니다."><span class="chip-hint">Hover a Die</span></div>
+          <div class="wafer-cap"><span>Si (100) · Ø300 mm</span><span id="chip-layer">— dies</span></div>
         </div>
       </div>
     </div>
@@ -550,7 +550,7 @@ footer { border-top: 1px solid var(--line); padding-block: 36px; }
 </script>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js"></script>
 <script>
-// Hero: interactive 3D die stack (substrate, FinFET array, M1-M5 interconnect, bumps)
+// Hero: interactive 3D wafer with patterned dies
 (function () {
   var box = document.getElementById('chip');
   if (!box || !window.THREE) return;
@@ -561,139 +561,158 @@ footer { border-top: 1px solid var(--line); padding-block: 36px; }
   box.insertBefore(renderer.domElement, box.firstChild);
 
   var scene = new T.Scene();
-  var camera = new T.PerspectiveCamera(26, 1, .1, 200);
-  camera.position.set(25, 20, 25); camera.lookAt(0, 1.7, 0);
-  scene.add(new T.HemisphereLight(0xffffff, 0xC9D6EA, .95));
-  var sun = new T.DirectionalLight(0xffffff, .85); sun.position.set(6, 14, 9); scene.add(sun);
-  var rim = new T.DirectionalLight(0xBFE8FB, .45); rim.position.set(-10, 4, -6); scene.add(rim);
+  var camera = new T.PerspectiveCamera(30, 1, .1, 100);
+  camera.position.set(0, 13.6, 15.4); camera.lookAt(0, -.6, 0);
+  scene.add(new T.HemisphereLight(0xffffff, 0xC9D6EA, .9));
+  var key = new T.DirectionalLight(0xffffff, .9); key.position.set(-6, 12, 6); scene.add(key);
+  var ice = new T.PointLight(0x7FD0F5, .9, 30); ice.position.set(6, 4, -4); scene.add(ice);
 
-  var seed = 20261102;
+  var R = 5, TH = .14, P = .66, GAP = .06, D = P - GAP, EDGE = .14;
+  var N = Math.ceil(2 * R / P), O = -N * P / 2;          // grid origin so the grid is centred
+  var seed = 519;
   function rnd() { seed = (seed * 1664525 + 1013904223) % 4294967296; return seed / 4294967296; }
-  function mat(c, o) { o = o || {}; return new T.MeshStandardMaterial({ color: c, roughness: o.r != null ? o.r : .55, metalness: o.m || 0, transparent: o.op != null, opacity: o.op != null ? o.op : 1, depthWrite: o.op == null }); }
-  var M = {
-    sub: mat(0xDCE3EC, { r: .7 }), fin: mat(0x7FD0F5, { r: .35, m: .1 }), gate: mat(0x0E1E3F, { r: .45, m: .2 }),
-    via: mat(0x24396B, { r: .4, m: .3 }), bump: mat(0xE9EEF5, { r: .22, m: .75 }), pad: mat(0xB9C6D8, { r: .35, m: .6 })
-  };
-  var EDGE = new T.LineBasicMaterial({ color: 0x0E1E3F, transparent: true, opacity: .28 });
-  var SIZE = 10, H = SIZE / 2 - .25, unit = new T.BoxGeometry(1, 1, 1);
-  var root = new T.Group(); scene.add(root);
-  var layers = [];
 
-  function addLayer(name, y0, h, slabOpacity, slabColor) {
-    var g = new T.Group(); g.position.y = y0; root.add(g);
-    var slab = new T.Mesh(new T.BoxGeometry(SIZE, h, SIZE), mat(slabColor || 0xF4F8FC, { op: slabOpacity, r: .2 }));
-    slab.position.y = h / 2; g.add(slab);
-    var edges = new T.LineSegments(new T.EdgesGeometry(slab.geometry), EDGE.clone());
-    edges.position.y = h / 2; g.add(edges);
-    var L = { name: name, group: g, base: y0, slab: slab, edges: edges, op: slabOpacity };
-    layers.push(L); return L;
-  }
-  // many boxes of one material as a single instanced mesh
-  function boxes(group, list, material) {
-    var im = new T.InstancedMesh(unit, material, list.length), m4 = new T.Matrix4();
-    list.forEach(function (b, i) {
-      m4.compose(new T.Vector3(b[0], b[1], b[2]), new T.Quaternion(), new T.Vector3(b[3], b[4], b[5]));
-      im.setMatrixAt(i, m4);
+  // ---- one die, drawn once: pad ring, 4 cores, SRAM banks, I/O and routing ----
+  var DP = 160, dieCv = document.createElement('canvas'); dieCv.width = dieCv.height = DP;
+  (function (c) {
+    var g = c.createLinearGradient(0, 0, DP, DP); g.addColorStop(0, '#1F3466'); g.addColorStop(1, '#162650');
+    c.fillStyle = g; c.fillRect(0, 0, DP, DP);
+    c.strokeStyle = 'rgba(127,208,245,.55)'; c.lineWidth = 1.2; c.strokeRect(6.5, 6.5, DP - 13, DP - 13);
+    c.fillStyle = '#9FB4D9';
+    for (var i = 14; i < DP - 14; i += 9) { c.fillRect(i, 9, 4, 4); c.fillRect(i, DP - 13, 4, 4); c.fillRect(9, i, 4, 4); c.fillRect(DP - 13, i, 4, 4); }
+    // CPU cores
+    [[22, 22], [62, 22], [22, 62], [62, 62]].forEach(function (p) {
+      c.fillStyle = '#2E4A86'; c.fillRect(p[0], p[1], 34, 34);
+      c.strokeStyle = 'rgba(159,180,217,.6)'; c.lineWidth = 1;
+      for (var k = 1; k < 4; k++) { c.beginPath(); c.moveTo(p[0] + k * 8.5, p[1] + 3); c.lineTo(p[0] + k * 8.5, p[1] + 31); c.stroke(); }
+      c.fillStyle = '#7FD0F5'; c.fillRect(p[0] + 4, p[1] + 4, 8, 6);
     });
-    group.add(im); return im;
+    // SRAM / cache banks: dense stripes
+    [[102, 22, 36, 74], [22, 102, 74, 36]].forEach(function (r) {
+      c.fillStyle = '#243C74'; c.fillRect(r[0], r[1], r[2], r[3]);
+      c.fillStyle = 'rgba(127,208,245,.45)';
+      if (r[3] > r[2]) for (var y = r[1] + 2; y < r[1] + r[3] - 1; y += 3) c.fillRect(r[0] + 2, y, r[2] - 4, 1.2);
+      else for (var x = r[0] + 2; x < r[0] + r[2] - 1; x += 3) c.fillRect(x, r[1] + 2, 1.2, r[3] - 4);
+    });
+    // analog / IO block
+    c.fillStyle = '#E5F6FD'; c.fillRect(102, 102, 36, 36);
+    c.fillStyle = '#24396B'; for (var a = 0; a < 3; a++) for (var b = 0; b < 3; b++) c.fillRect(106 + a * 11, 106 + b * 11, 7, 7);
+    // global routing
+    c.strokeStyle = 'rgba(229,246,253,.35)'; c.lineWidth = .8;
+    [58, 98].forEach(function (v) { c.beginPath(); c.moveTo(18, v); c.lineTo(DP - 18, v); c.moveTo(v, 18); c.lineTo(v, DP - 18); c.stroke(); });
+  })(dieCv.getContext('2d'));
+
+  // ---- the wafer surface: silicon, iridescent sheen, die grid, partial edge dies, laser mark ----
+  var W = 2048, cv = document.createElement('canvas'); cv.width = cv.height = W;
+  var c = cv.getContext('2d'), k = W / (2 * R);
+  function px(v) { return (v + R) * k; }
+  var bg = c.createRadialGradient(W * .4, W * .35, 0, W / 2, W / 2, W * .55);
+  bg.addColorStop(0, '#F7F9FC'); bg.addColorStop(1, '#C9D3E0');
+  c.fillStyle = bg; c.fillRect(0, 0, W, W);
+  if (c.createConicGradient) {
+    var cg = c.createConicGradient(0, W / 2, W / 2);
+    ['#BFE8FB', '#E7DDF7', '#F9E6EC', '#E1F4E8', '#BFE8FB'].forEach(function (col, i) { cg.addColorStop(i / 4, col); });
+    c.globalAlpha = .35; c.fillStyle = cg; c.fillRect(0, 0, W, W); c.globalAlpha = 1;
   }
-
-  // 0. Si substrate
-  var sub = addLayer('Si Substrate · 300 mm wafer', -1.4, 1.4, 1, 0xDCE3EC);
-  sub.slab.material = M.sub;
-
-  // 1. FEOL: fins along x, gates along z, crossing over them
-  var feol = addLayer('FEOL · FinFET Array', 0, .7, .14, 0xBFE8FB);
-  var fins = [], gates = [], cont = [];
-  for (var z = -H + .2; z <= H - .1; z += .42) fins.push([0, .18, z, SIZE - .5, .36, .12]);
-  for (var x = -H + .3; x <= H - .1; x += .62) {
-    gates.push([x, .26, 0, .16, .52, SIZE - .5]);
-    if (x + .31 < H) for (var zc = -H + .4; zc < H; zc += 1.26) if (rnd() > .35) cont.push([x + .31, .5, zc, .12, .3, .34]);
-  }
-  boxes(feol.group, fins, M.fin); boxes(feol.group, gates, M.gate); boxes(feol.group, cont, M.via);
-
-  // 2-6. BEOL metal layers: wires alternate direction, pitch widens going up
-  var NAMES = ['M1 · Local Interconnect', 'M2 · Local Interconnect', 'M3 · Intermediate', 'M4 · Intermediate', 'M5 · Global Interconnect'];
-  var COLS = [0x7FD0F5, 0x8FCCEE, 0x9FC3E2, 0xAEBCD6, 0xBCC8DA];
-  var y = .7;
-  NAMES.forEach(function (name, i) {
-    var h = .62 + i * .06, Lr = addLayer(name, y, h, .1);
-    var pitch = .34 + i * .15, w = pitch * .48, th = .16 + i * .04, alongX = i % 2 === 0;
-    var wires = [], vias = [], wy = h - th / 2 - .04;
-    for (var t = -H + pitch / 2; t <= H; t += pitch) {
-      var p = -H;
-      while (p < H - .3) {
-        var len = Math.min(.8 + rnd() * 3.6, H - p), c = p + len / 2;
-        if (rnd() > .14) {
-          wires.push(alongX ? [c, wy, t, len, th, w] : [t, wy, c, w, th, len]);
-          var nv = rnd() > .45 ? 1 + Math.floor(rnd() * 2) : 0;
-          for (var k = 0; k < nv; k++) {
-            var vp = p + .15 + rnd() * (len - .3), vh = wy - th / 2;
-            vias.push(alongX ? [vp, vh / 2, t, w * .8, vh, w * .8] : [t, vh / 2, vp, w * .8, vh, w * .8]);
-          }
-        }
-        p += len + .15 + rnd() * .6;
-      }
-    }
-    boxes(Lr.group, wires, mat(COLS[i], { r: .3, m: .45 }));
-    boxes(Lr.group, vias, M.via);
-    y += h;
-  });
-
-  // 7. Passivation with pad array and solder bumps
-  var top = addLayer('Bumps · C4 Solder Array', y, .3, .22, 0xE5F6FD);
-  var pads = [], N = 7, sp = (SIZE - 1.6) / (N - 1);
-  var sg = new T.SphereGeometry(.34, 24, 16), bumps = new T.InstancedMesh(sg, M.bump, N * N), m4 = new T.Matrix4();
+  var dies = [], inner = R - EDGE;
   for (var i = 0; i < N; i++) for (var j = 0; j < N; j++) {
-    var bx = -H + .55 + i * sp, bz = -H + .55 + j * sp;
-    pads.push([bx, .3, bz, .7, .06, .7]);
-    m4.makeTranslation(bx, .52, bz); bumps.setMatrixAt(i * N + j, m4);
+    var x0 = O + i * P + GAP / 2, z0 = O + j * P + GAP / 2, x1 = x0 + D, z1 = z0 + D;
+    var corners = [[x0, z0], [x1, z0], [x0, z1], [x1, z1]];
+    var nIn = corners.filter(function (q) { return Math.hypot(q[0], q[1]) < inner; }).length;
+    if (nIn === 0) continue;
+    var full = nIn === 4 && z1 < R - .5;
+    c.save();
+    c.beginPath(); c.arc(W / 2, W / 2, inner * k, 0, Math.PI * 2); c.clip();
+    c.globalAlpha = full ? 1 : .35;
+    c.drawImage(dieCv, px(x0), px(z0), D * k, D * k);
+    c.restore();
+    if (full) dies.push({ i: i, j: j, x: x0 + D / 2, z: z0 + D / 2, bin: rnd() < .08 ? 2 : 1 });
   }
-  boxes(top.group, pads, M.pad); top.group.add(bumps);
+  // test-map tint on a few dies (bin 2) so the wafer reads like a probed wafer
+  c.fillStyle = 'rgba(127,208,245,.32)';
+  dies.forEach(function (d) { if (d.bin === 2) c.fillRect(px(d.x - D / 2), px(d.z - D / 2), D * k, D * k); });
+  // edge exclusion ring and laser mark near the notch
+  c.strokeStyle = 'rgba(14,30,63,.18)'; c.lineWidth = 2;
+  c.beginPath(); c.arc(W / 2, W / 2, inner * k, 0, Math.PI * 2); c.stroke();
+  c.fillStyle = 'rgba(14,30,63,.55)'; c.font = '500 26px "IBM Plex Mono", monospace'; c.textAlign = 'center';
+  c.fillText('HISEM-2026 · LOT 0519 · W07', W / 2, W - 34);
+  var tex = new T.CanvasTexture(cv);
+  tex.encoding = T.sRGBEncoding; tex.anisotropy = renderer.capabilities.getMaxAnisotropy();
+  tex.repeat.set(1 / (2 * R), 1 / (2 * R)); tex.offset.set(.5, .5);
 
-  // Interaction: tilt toward the pointer, explode the stack on hover, highlight the layer under the cursor
+  // ---- wafer body: disc with a notch, slightly bevelled ----
+  var shape = new T.Shape(), a = .035, notch = .2;
+  shape.absarc(0, 0, R, -Math.PI / 2 + a, Math.PI * 1.5 - a, false);
+  shape.lineTo(0, -R + notch); shape.closePath();
+  var geo = new T.ExtrudeGeometry(shape, { depth: TH, bevelEnabled: true, bevelThickness: .02, bevelSize: .03, bevelSegments: 3, curveSegments: 160 });
+  geo.rotateX(-Math.PI / 2); geo.translate(0, -TH, 0);
+  var waferMats = [
+    new T.MeshStandardMaterial({ map: tex, roughness: .32, metalness: .18 }),
+    new T.MeshStandardMaterial({ color: 0xC5CFDD, roughness: .3, metalness: .55 })
+  ];
+  var root = new T.Group(); scene.add(root);
+  var wafer = new T.Mesh(geo, waferMats); root.add(wafer);
+
+  // inspection scan line that sweeps across the wafer
+  var scan = new T.Mesh(new T.PlaneGeometry(1, .07), new T.MeshBasicMaterial({ color: 0x7FD0F5, transparent: true, opacity: .75, depthWrite: false }));
+  scan.rotation.x = -Math.PI / 2; scan.position.y = .012; root.add(scan);
+  var glow = new T.Mesh(new T.PlaneGeometry(1, .5), new T.MeshBasicMaterial({ color: 0x7FD0F5, transparent: true, opacity: .12, depthWrite: false }));
+  glow.rotation.x = -Math.PI / 2; glow.position.y = .011; root.add(glow);
+
+  // the picked die: lifts out of the wafer, its slot lights up
+  var dieTex = new T.CanvasTexture(dieCv); dieTex.encoding = T.sRGBEncoding;
+  var side = new T.MeshStandardMaterial({ color: 0x24396B, roughness: .35, metalness: .4 });
+  var tile = new T.Mesh(new T.BoxGeometry(D, .08, D), [side, side, new T.MeshStandardMaterial({ map: dieTex, roughness: .3, metalness: .2, emissive: 0x2BA8E6, emissiveIntensity: .25 }), side, side, side]);
+  var outline = new T.LineSegments(new T.EdgesGeometry(tile.geometry), new T.LineBasicMaterial({ color: 0x7FD0F5 }));
+  tile.add(outline); tile.visible = false; root.add(tile);
+  var slot = new T.Mesh(new T.PlaneGeometry(D, D), new T.MeshBasicMaterial({ color: 0x7FD0F5, transparent: true, opacity: 0, depthWrite: false }));
+  slot.rotation.x = -Math.PI / 2; slot.position.y = .006; root.add(slot);
+
+  // ---- interaction ----
   var reduce = window.matchMedia && window.matchMedia('(prefers-reduced-motion: reduce)').matches;
   var hero = box.closest('.hero') || box, label = document.getElementById('chip-layer');
-  var target = { x: 0, y: 0, e: 0 }, cur = { x: 0, y: 0, e: 0 }, ptr = new T.Vector2(), ray = new T.Raycaster();
-  var inside = false, touched = false, hovered = null, dragging = null;
-  var slabs = layers.map(function (l) { return l.slab; });
-  var idle = label.textContent;
-  if (window.matchMedia && window.matchMedia('(hover: none)').matches) box.querySelector('.chip-hint').textContent = 'Tap · Explode';
+  var idle = dies.length + ' dies'; label.textContent = idle;
+  if (window.matchMedia && window.matchMedia('(hover: none)').matches) box.querySelector('.chip-hint').textContent = 'Tap a Die';
+  var target = { x: 0, y: 0 }, cur = { x: 0, y: 0, spin: 0, lift: 0 }, ptr = new T.Vector2(-9, -9), ray = new T.Raycaster();
+  var inside = false, dragging = null, picked = null, pinned = null;
+  var byKey = {}; dies.forEach(function (d) { byKey[d.i + ',' + d.j] = d; });
 
-  function setPtr(e) {
-    var r = box.getBoundingClientRect();
-    ptr.set((e.clientX - r.left) / r.width * 2 - 1, -((e.clientY - r.top) / r.height) * 2 + 1);
-    return r;
-  }
+  function setPtr(e) { var r = box.getBoundingClientRect(); ptr.set((e.clientX - r.left) / r.width * 2 - 1, -((e.clientY - r.top) / r.height) * 2 + 1); }
   hero.addEventListener('pointermove', function (e) {
-    var h = hero.getBoundingClientRect();
     if (!dragging) {
-      target.y = ((e.clientX - h.left) / h.width - .5) * .9;
-      target.x = ((e.clientY - h.top) / h.height - .5) * .35;
+      var h = hero.getBoundingClientRect();
+      target.y = ((e.clientX - h.left) / h.width - .5) * .7;
+      target.x = ((e.clientY - h.top) / h.height - .5) * .45;
     }
     setPtr(e);
   });
-  hero.addEventListener('pointerleave', function () { if (!dragging) { target.x = target.y = 0; } });
-  box.addEventListener('pointerenter', function (e) { if (e.pointerType === 'mouse') { inside = true; target.e = 1; box.classList.add('active'); } });
-  box.addEventListener('pointerleave', function (e) { if (e.pointerType === 'mouse') { inside = false; target.e = 0; box.classList.remove('active'); } });
-  // drag to spin (mouse and touch); a tap on touch toggles the exploded view
+  hero.addEventListener('pointerleave', function () { if (!dragging) target.x = target.y = 0; });
+  box.addEventListener('pointerenter', function (e) { if (e.pointerType === 'mouse') { inside = true; box.classList.add('active'); } });
+  box.addEventListener('pointerleave', function (e) { if (e.pointerType === 'mouse') { inside = false; ptr.set(-9, -9); box.classList.remove('active'); } });
   box.addEventListener('pointerdown', function (e) {
+    setPtr(e);
     dragging = { x: e.clientX, y: e.clientY, ry: target.y, rx: target.x, moved: false };
     if (e.pointerType === 'mouse') box.setPointerCapture(e.pointerId);
-    box.style.cursor = 'grabbing';
   });
   window.addEventListener('pointermove', function (e) {
     if (!dragging) return;
     var dx = e.clientX - dragging.x, dy = e.clientY - dragging.y;
-    if (Math.abs(dx) + Math.abs(dy) > 6) dragging.moved = true;
-    target.y = dragging.ry + dx * .01;
-    target.x = Math.max(-.5, Math.min(.6, dragging.rx + dy * .005));
+    if (Math.abs(dx) + Math.abs(dy) > 6) { dragging.moved = true; box.style.cursor = 'grabbing'; }
+    if (dragging.moved) { target.y = dragging.ry + dx * .01; target.x = Math.max(-.45, Math.min(.5, dragging.rx + dy * .005)); }
   });
   window.addEventListener('pointerup', function (e) {
     if (!dragging) return;
-    if (!dragging.moved && e.pointerType !== 'mouse') { touched = !touched; target.e = touched ? 1 : 0; box.classList.toggle('active', touched); }
+    if (!dragging.moved && e.pointerType !== 'mouse') { pinned = pickDie(); box.classList.toggle('active', !!pinned); }
     dragging = null; box.style.cursor = '';
   });
+  function pickDie() {
+    ray.setFromCamera(ptr, camera);
+    var h = ray.intersectObject(wafer);
+    if (!h.length) return null;
+    var p = root.worldToLocal(h[0].point.clone());
+    var i = Math.floor((p.x - O) / P), j = Math.floor((p.z - O) / P);
+    return byKey[i + ',' + j] || null;
+  }
 
   function resize() {
     var w = box.clientWidth, h = box.clientHeight;
@@ -705,29 +724,35 @@ footer { border-top: 1px solid var(--line); padding-block: 36px; }
 
   var visible = true;
   if (window.IntersectionObserver) new IntersectionObserver(function (en) { visible = en[0].isIntersecting; }).observe(box);
-  var t0 = performance.now();
+  var last = performance.now();
   function frame(now) {
     requestAnimationFrame(frame);
+    var dt = Math.min(.05, (now - last) / 1000); last = now;
     if (!visible || document.hidden || !box.clientWidth) return;
-    var k = reduce ? 1 : .07, t = (now - t0) / 1000;
-    cur.x += (target.x - cur.x) * k; cur.y += (target.y - cur.y) * k; cur.e += (target.e - cur.e) * (reduce ? 1 : .06);
-    var sway = reduce ? 0 : Math.sin(t * .35) * .08;
-    root.rotation.set(cur.x, cur.y + sway, 0);
-    var e = cur.e * cur.e * (3 - 2 * cur.e);
-    layers.forEach(function (l, i) { l.group.position.y = l.base + e * i * .8; });
-    root.position.y = -e * 2.8;
+    var e = reduce ? 1 : .07;
+    cur.x += (target.x - cur.x) * e; cur.y += (target.y - cur.y) * e;
+    var hit = inside ? pickDie() : pinned;
+    if (!reduce && !hit) cur.spin += dt * .06;
+    root.rotation.set(cur.x, cur.y + cur.spin, 0);
 
-    var hit = null;
-    if (inside || touched) {
-      ray.setFromCamera(ptr, camera);
-      var hs = ray.intersectObjects(slabs);
-      if (hs.length) hit = layers[slabs.indexOf(hs[0].object)];
+    // scan line: chord of the disc at the current position
+    var t = reduce ? .3 : ((now / 1000) * .12) % 1, zz = -R + .2 + t * (2 * R - .4), chord = 2 * Math.sqrt(Math.max(0, inner * inner - zz * zz));
+    scan.position.z = zz; scan.scale.x = chord; glow.position.z = zz - .25; glow.scale.x = chord;
+    scan.visible = glow.visible = !reduce;
+
+    if (hit !== picked) {
+      picked = hit; cur.lift = reduce ? 1 : 0;
+      if (hit) {
+        tile.position.set(hit.x, 0, hit.z); slot.position.x = hit.x; slot.position.z = hit.z;
+        label.textContent = 'DIE (' + ('0' + hit.i).slice(-2) + ', ' + ('0' + hit.j).slice(-2) + ') · BIN ' + hit.bin + ' · PASS';
+      } else label.textContent = idle;
     }
-    if (hit !== hovered) {
-      if (hovered) { hovered.edges.material.opacity = .28; hovered.edges.material.color.setHex(0x0E1E3F); if (hovered.op < 1) hovered.slab.material.opacity = hovered.op; }
-      if (hit) { hit.edges.material.opacity = 1; hit.edges.material.color.setHex(0x2BA8E6); if (hit.op < 1) hit.slab.material.opacity = Math.min(.5, hit.op + .2); }
-      hovered = hit; label.textContent = hit ? hit.name : idle;
-    }
+    tile.visible = !!picked;
+    if (picked) {
+      cur.lift += (1 - cur.lift) * (reduce ? 1 : .12);
+      tile.position.y = .04 + cur.lift * 1.5; tile.rotation.y = (1 - cur.lift) * .5; tile.scale.set(1 + cur.lift * 1.1, 1 + cur.lift * .6, 1 + cur.lift * 1.1);
+      slot.material.opacity = .85 * cur.lift;
+    } else slot.material.opacity *= .85;
     renderer.render(scene, camera);
   }
   requestAnimationFrame(frame);
