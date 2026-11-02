@@ -237,9 +237,11 @@ b, strong { font-weight: 500; }
 /* People */
 .people { display: grid; grid-template-columns: repeat(auto-fill, minmax(160px, 1fr)); gap: 12px; }
 .person { border: 1px solid var(--line); border-radius: 12px; padding: 18px; display: flex; flex-direction: column; align-items: flex-start; gap: 6px; }
-.avatar { width: 44px; height: 44px; border-radius: 50%; background: var(--tint); border: 1px dashed #C9D2DF; margin-bottom: 4px; }
+.avatar { width: 44px; height: 44px; border-radius: 50%; background: var(--ice-soft); color: var(--navy); display: grid; place-items: center; font-family: var(--body); font-size: 17px; font-weight: 500; margin-bottom: 4px; }
 .person b { font-size: 15px; color: var(--navy); font-weight: 500; }
 .person span { font-size: 13px; color: var(--muted); }
+.person .mail { margin-top: 4px; font-family: var(--mono); font-size: 12px; color: var(--navy-2); text-decoration: none; overflow-wrap: break-word; }
+.person .mail:hover { text-decoration: underline; }
 
 /* Join */
 .join { background: var(--navy); color: #fff; border-radius: 16px; padding: 40px 36px; display: grid; grid-template-columns: minmax(0, 1fr) auto; gap: 28px; align-items: center; }
@@ -403,23 +405,31 @@ footer { border-top: 1px solid var(--line); padding-block: 36px; }
   </section>
 
   <!-- MEMBERS -->
-  <section class="view" data-view="executive" hidden>
+  <section class="view" data-view="member" hidden>
     <div class="page-body"><div class="wrap">
-      <p class="lead">HISEM 운영진 <span class="status">업데이트 예정</span></p>
+      <p class="lead">HISEM과 함께 공부하는 멤버들입니다.</p>
       <div class="people">
-        <div class="person"><div class="avatar"></div><b>회장</b><span>이름 · 학과</span></div>
-        <div class="person"><div class="avatar"></div><b>부회장</b><span>이름 · 학과</span></div>
-        <div class="person"><div class="avatar"></div><b>학술부장</b><span>이름 · 학과</span></div>
-        <div class="person"><div class="avatar"></div><b>홍보부장</b><span>이름 · 학과</span></div>
+        <div class="person"><div class="avatar" aria-hidden="true">박</div><b>박다운</b><span>신소재공학과</span></div>
+        <div class="person"><div class="avatar" aria-hidden="true">오</div><b>오원규</b><span>신소재공학과</span><a class="mail" href="mailto:wongyuoh@g.hongik.ac.kr">wongyuoh@<wbr>g.hongik.ac.kr</a></div>
+        <div class="person"><div class="avatar" aria-hidden="true">김</div><b>김재형</b><span>신소재공학과</span></div>
+        <div class="person"><div class="avatar" aria-hidden="true">이</div><b>이승현</b><span>신소재공학과</span></div>
+        <div class="person"><div class="avatar" aria-hidden="true">김</div><b>김민희</b><span>신소재공학과</span></div>
+        <div class="person"><div class="avatar" aria-hidden="true">이</div><b>이현욱</b><span>신소재공학과</span></div>
+        <div class="person"><div class="avatar" aria-hidden="true">장</div><b>장규홍</b><span>신소재공학과</span></div>
+        <div class="person"><div class="avatar" aria-hidden="true">이</div><b>이기호</b><span>신소재공학과</span></div>
+        <div class="person"><div class="avatar" aria-hidden="true">고</div><b>고경환</b><span>신소재공학과</span></div>
+        <div class="person"><div class="avatar" aria-hidden="true">차</div><b>차진표</b><span>신소재공학과</span></div>
+        <div class="person"><div class="avatar" aria-hidden="true">최</div><b>최민서</b><span>신소재공학과</span></div>
+        <div class="person"><div class="avatar" aria-hidden="true">한</div><b>한수빈</b><span>신소재공학과</span></div>
       </div>
     </div></div>
   </section>
 
-  <section class="view" data-view="member" hidden>
+  <section class="view" data-view="alumni" hidden>
     <div class="page-body"><div class="wrap">
       <div class="placeholder">
-        <div class="ph-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><circle cx="9" cy="8" r="3.5"/><path d="M2.5 20c1-3.5 3.5-5 6.5-5s5.5 1.5 6.5 5"/><circle cx="17" cy="9" r="2.5"/><path d="M17 14c2.3 0 4 1.3 4.8 4"/></svg></div>
-        <div><h3>학회원 명단 <span class="status">1기 모집 후 공개</span></h3><p>기수별 학회원 명단이 이곳에 정리됩니다.</p></div>
+        <div class="ph-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><path d="M2 9l10-5 10 5-10 5z"/><path d="M6 11v5c2 2 10 2 12 0v-5"/><path d="M22 9v6"/></svg></div>
+        <div><h3>Alumni <span class="status">준비 중</span></h3><p>활동을 마친 멤버들이 이곳에 기록됩니다.</p></div>
       </div>
     </div></div>
   </section>
@@ -473,7 +483,7 @@ footer { border-top: 1px solid var(--line); padding-block: 36px; }
     { label: 'About', items: [['introduction', 'Introduction'], ['professor', 'Professor']] },
     { label: 'Activities', items: [['curriculum', 'Curriculum']] },
     { label: 'Archive', items: [['activity', '활동내용'], ['publication', 'Publication'], ['contest', '공모전'], ['external', '대외활동']] },
-    { label: 'Members', items: [['executive', 'Executive'], ['member', 'Member']] },
+    { label: 'Members', items: [['member', 'Member'], ['alumni', 'Alumni']] },
     { label: 'Join Us', items: [['recruitment', 'Recruitment'], ['contact', 'Contact']] }
   ];
   var chevron = '<svg viewBox="0 0 10 10" fill="none" stroke="currentColor" stroke-width="1.3"><path d="M2 3.5l3 3 3-3"/></svg>';
