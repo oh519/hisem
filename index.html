@@ -124,7 +124,32 @@ b, strong { font-weight: 500; }
 .lead { font-size: clamp(18px, 2.2vw, 22px); line-height: 1.65; color: var(--ink); max-width: 32em; margin: 0; text-wrap: pretty; }
 
 /* Home */
-.hero { border-bottom: 1px solid var(--line); overflow: hidden; }
+.hero {
+  position: relative; isolation: isolate; border-bottom: 1px solid var(--line); overflow: hidden;
+  background:
+    radial-gradient(ellipse 46% 62% at 76% 46%, rgba(127, 208, 245, .20), transparent 70%),
+    radial-gradient(ellipse 40% 50% at 4% 110%, rgba(14, 30, 63, .06), transparent 70%),
+    linear-gradient(180deg, #FFFFFF 0%, #F6F8FC 100%);
+}
+/* Photomask grid: fine lines with lattice points at each intersection, fading out from the wafer */
+.hero::before {
+  content: ""; position: absolute; inset: 0; z-index: -1; pointer-events: none;
+  background-image:
+    radial-gradient(circle, rgba(14, 30, 63, .16) 1px, transparent 1.6px),
+    linear-gradient(rgba(14, 30, 63, .045) 1px, transparent 1px),
+    linear-gradient(90deg, rgba(14, 30, 63, .045) 1px, transparent 1px);
+  background-size: 48px 48px; background-position: -24px -24px, 0 0, 0 0;
+  -webkit-mask-image: radial-gradient(ellipse 70% 85% at 72% 45%, #000 15%, transparent 75%);
+          mask-image: radial-gradient(ellipse 70% 85% at 72% 45%, #000 15%, transparent 75%);
+}
+/* Concentric rings echoing the wafer, like interference fringes */
+.hero::after {
+  content: ""; position: absolute; z-index: -1; pointer-events: none;
+  width: 920px; height: 920px; left: 76%; top: 46%; transform: translate(-50%, -50%);
+  background: repeating-radial-gradient(circle, transparent 0 37px, rgba(14, 30, 63, .07) 37px 38px);
+  -webkit-mask-image: radial-gradient(circle, transparent 22%, #000 30%, transparent 68%);
+          mask-image: radial-gradient(circle, transparent 22%, #000 30%, transparent 68%);
+}
 .hero-grid { display: grid; grid-template-columns: minmax(0, 1.15fr) minmax(0, .85fr); gap: 48px; align-items: center; padding-block: 84px 76px; }
 .eyebrow {
   font-family: var(--mono); font-weight: 300; font-size: 12px; letter-spacing: .14em; text-transform: uppercase; color: var(--muted);
@@ -150,7 +175,7 @@ b, strong { font-weight: 500; }
 .btn.ghost { color: var(--navy); background: var(--bg); }
 .btn.ghost:hover { background: var(--tint); }
 .wafer-wrap { max-width: 400px; width: 100%; justify-self: center; }
-.wafer-wrap svg { display: block; width: 100%; height: auto; }
+.wafer-wrap svg { display: block; width: 100%; height: auto; filter: drop-shadow(0 24px 40px rgba(14, 30, 63, .12)) drop-shadow(0 2px 6px rgba(14, 30, 63, .06)); }
 .wafer-cap { font-family: var(--mono); font-weight: 300; font-size: 11px; color: var(--muted); letter-spacing: .08em; display: flex; justify-content: space-between; margin-top: 10px; gap: 12px; }
 .die { fill: var(--tint); stroke: var(--line); stroke-width: 1; transition: fill .6s ease; }
 .die.lit { fill: var(--ice); }
@@ -164,6 +189,16 @@ b, strong { font-weight: 500; }
 @media (max-width: 860px) {
   .hero-grid { grid-template-columns: 1fr; padding-block: 52px 44px; gap: 36px; }
   .wafer-wrap { max-width: 280px; }
+  .hero {
+    background:
+      radial-gradient(ellipse 80% 40% at 50% 78%, rgba(127, 208, 245, .20), transparent 70%),
+      linear-gradient(180deg, #FFFFFF 0%, #F6F8FC 100%);
+  }
+  .hero::before {
+    -webkit-mask-image: radial-gradient(ellipse 90% 60% at 50% 75%, #000 10%, transparent 75%);
+            mask-image: radial-gradient(ellipse 90% 60% at 50% 75%, #000 10%, transparent 75%);
+  }
+  .hero::after { width: 640px; height: 640px; left: 50%; top: 76%; }
   .quick { grid-template-columns: repeat(2, minmax(0, 1fr)); border-left: 0; }
   .quick a { border-bottom: 1px solid var(--line); }
   .quick a:nth-child(2n) { border-right: 0; }
