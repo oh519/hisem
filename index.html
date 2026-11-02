@@ -1,0 +1,542 @@
+<title>HISEM</title>
+<meta name="claude:viewport-fit-sides" content="cover">
+<meta name="description" content="HISEM · 홍익대학교 신소재공학과 반도체 학술 동아리">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Archivo:wdth,wght@62..125,200..700&family=IBM+Plex+Mono:wght@300;400&family=IBM+Plex+Sans+KR:wght@300;400;500&display=swap">
+<style>
+/* Layout: white multi-page site — sticky top nav with hover dropdowns; each sub-item opens its own view (hash routed) */
+:root {
+  --bg: #FFFFFF;
+  --tint: #F4F7FB;
+  --ink: #141A26;
+  --muted: #646E80;
+  --line: #E4E8EF;
+  --navy: #0E1E3F;
+  --navy-2: #24396B;
+  --ice: #7FD0F5;
+  --ice-soft: #E5F6FD;
+  --display: "Archivo", "IBM Plex Sans KR", system-ui, sans-serif;
+  --body: "IBM Plex Sans KR", "Apple SD Gothic Neo", "Malgun Gothic", system-ui, sans-serif;
+  --mono: "IBM Plex Mono", ui-monospace, SFMono-Regular, Menlo, monospace;
+  --wrap: 1120px;
+  color-scheme: light;
+}
+* { box-sizing: border-box; }
+body {
+  background: var(--bg); color: var(--ink);
+  font-family: var(--body); font-weight: 300; font-size: 16px; line-height: 1.75;
+  -webkit-font-smoothing: antialiased;
+}
+body::before { content: ""; position: fixed; inset: 0 0 auto; height: env(safe-area-inset-top, 0px); z-index: 60; background: var(--bg); }
+a { color: inherit; }
+b, strong { font-weight: 500; }
+.wrap {
+  max-width: var(--wrap); margin: 0 auto;
+  padding-left: max(16px, env(safe-area-inset-left, 0px));
+  padding-right: max(16px, env(safe-area-inset-right, 0px));
+}
+@media (min-width: 720px) { .wrap { padding-left: max(32px, env(safe-area-inset-left, 0px)); padding-right: max(32px, env(safe-area-inset-right, 0px)); } }
+:focus-visible { outline: 2px solid var(--navy-2); outline-offset: 2px; }
+
+/* ---------- Header + dropdown nav ---------- */
+.site-header {
+  position: sticky; top: env(safe-area-inset-top, 0px); z-index: 50;
+  background: var(--bg); border-bottom: 1px solid var(--line);
+}
+.nav { display: flex; align-items: center; justify-content: space-between; height: 68px; gap: 24px; }
+.brand { display: flex; align-items: center; gap: 10px; text-decoration: none; color: var(--navy); }
+.brand svg { width: 28px; height: 28px; flex: none; }
+.wordmark { font-family: var(--display); font-weight: 600; font-stretch: 108%; font-size: 19px; letter-spacing: .06em; line-height: 1; }
+.menu { display: flex; list-style: none; margin: 0; padding: 0; gap: 2px; height: 100%; }
+.menu > li { position: relative; display: flex; align-items: center; }
+.top {
+  appearance: none; background: none; border: 0; cursor: pointer;
+  display: flex; align-items: center; gap: 6px; padding: 8px 14px; height: 100%;
+  font-family: var(--display); font-stretch: 92%; font-weight: 400; font-size: 15px; letter-spacing: .02em; color: var(--muted);
+}
+.top svg { width: 10px; height: 10px; transition: transform .2s ease; }
+.top.current { color: var(--navy); }
+.top.current::after { content: ""; position: absolute; left: 14px; right: 14px; bottom: -1px; height: 2px; background: var(--navy); }
+.drop {
+  position: absolute; top: 100%; left: 50%; transform: translate(-50%, 6px);
+  min-width: 190px; list-style: none; margin: 0; padding: 8px;
+  background: var(--bg); border: 1px solid var(--line); border-radius: 10px;
+  box-shadow: 0 12px 32px rgba(14, 30, 63, .10);
+  opacity: 0; visibility: hidden; transition: opacity .16s ease, transform .16s ease, visibility .16s;
+}
+.drop a {
+  display: block; padding: 9px 12px; border-radius: 6px; text-decoration: none;
+  font-size: 14px; font-weight: 300; color: var(--ink); white-space: nowrap;
+}
+.drop a:hover, .drop a:focus-visible { background: var(--tint); color: var(--navy); }
+.drop a.current { color: var(--navy); font-weight: 500; }
+.drop a.current::before { content: ""; display: inline-block; width: 6px; height: 6px; background: var(--ice); margin-right: 8px; vertical-align: 2px; }
+@media (hover: hover) and (min-width: 861px) {
+  .menu > li:hover .drop { opacity: 1; visibility: visible; transform: translate(-50%, 0); }
+  .menu > li:hover .top { color: var(--navy); }
+  .menu > li:hover .top svg { transform: rotate(180deg); }
+}
+@media (min-width: 861px) {
+  .menu > li:focus-within .drop, .menu > li.open .drop { opacity: 1; visibility: visible; transform: translate(-50%, 0); }
+}
+.menu-btn {
+  display: none; width: 40px; height: 40px; border: 1px solid var(--line); border-radius: 8px;
+  background: var(--bg); color: var(--navy); cursor: pointer; align-items: center; justify-content: center;
+}
+.menu-btn svg { width: 20px; height: 20px; }
+@media (max-width: 860px) {
+  .menu-btn { display: inline-flex; }
+  .menu {
+    position: absolute; left: 0; right: 0; top: 68px; flex-direction: column; height: auto; gap: 0;
+    background: var(--bg); border-bottom: 1px solid var(--line); max-height: calc(100vh - 68px); overflow-y: auto;
+    padding: 8px max(16px, env(safe-area-inset-right, 0px)) 16px max(16px, env(safe-area-inset-left, 0px));
+  }
+  .menu[data-open="false"] { display: none; }
+  .menu > li { flex-direction: column; align-items: stretch; border-bottom: 1px solid var(--line); }
+  .top { justify-content: space-between; padding: 14px 4px; font-size: 16px; }
+  .top.current::after { display: none; }
+  .drop { position: static; transform: none; box-shadow: none; border: 0; padding: 0 0 10px; display: none; opacity: 1; visibility: visible; min-width: 0; }
+  .menu > li.open .drop { display: block; }
+  .menu > li.open .top svg { transform: rotate(180deg); }
+}
+
+/* ---------- Views ---------- */
+.view { min-height: calc(100vh - 69px - 120px); }
+.page-head { border-bottom: 1px solid var(--line); background: var(--tint); }
+.page-head .wrap { padding-block: 56px 0; }
+.crumb { font-family: var(--mono); font-weight: 300; font-size: 12px; letter-spacing: .1em; text-transform: uppercase; color: var(--muted); margin: 0 0 10px; }
+.crumb span + span::before { content: "›"; margin: 0 8px; }
+.page-head h1 {
+  font-family: var(--display); font-weight: 300; font-stretch: 90%;
+  font-size: clamp(34px, 5.5vw, 56px); line-height: 1.05; letter-spacing: -.01em; color: var(--navy); margin: 0 0 28px; text-wrap: balance;
+}
+.subtabs { display: flex; gap: 4px; overflow-x: auto; scrollbar-width: none; }
+.subtabs::-webkit-scrollbar { display: none; }
+.subtabs a {
+  padding: 12px 16px; text-decoration: none; white-space: nowrap; font-size: 14px; font-weight: 300; color: var(--muted);
+  border-bottom: 2px solid transparent; margin-bottom: -1px;
+}
+.subtabs a:hover { color: var(--navy); }
+.subtabs a.current { color: var(--navy); font-weight: 500; border-bottom-color: var(--navy); }
+.page-body { padding-block: 56px 88px; }
+.page-body > .wrap > * + * { margin-top: 28px; }
+.lead { font-size: clamp(18px, 2.2vw, 22px); line-height: 1.65; color: var(--ink); max-width: 32em; margin: 0; text-wrap: pretty; }
+
+/* Home */
+.hero { border-bottom: 1px solid var(--line); overflow: hidden; }
+.hero-grid { display: grid; grid-template-columns: minmax(0, 1.15fr) minmax(0, .85fr); gap: 48px; align-items: center; padding-block: 84px 76px; }
+.eyebrow {
+  font-family: var(--mono); font-weight: 300; font-size: 12px; letter-spacing: .14em; text-transform: uppercase; color: var(--muted);
+  display: flex; flex-wrap: wrap; gap: 6px 14px; margin: 0 0 22px;
+}
+.eyebrow span + span::before { content: "/"; margin-right: 14px; color: #C9D2DF; }
+.hero h1 {
+  font-family: var(--display); font-weight: 300; font-stretch: 88%;
+  font-size: clamp(46px, 7.4vw, 92px); line-height: .98; letter-spacing: -.025em;
+  color: var(--navy); margin: 0 0 24px; text-wrap: balance;
+}
+.hero h1 .it { font-weight: 200; font-style: italic; color: var(--navy-2); }
+.hero h1 mark { background: linear-gradient(transparent 66%, var(--ice) 66%, var(--ice) 90%, transparent 90%); color: inherit; padding: 0 .04em; font-weight: 500; }
+.hero .lede { font-size: clamp(16px, 1.9vw, 18px); color: var(--muted); max-width: 34em; margin: 0 0 32px; }
+.hero .lede strong { color: var(--ink); }
+.btns { display: flex; flex-wrap: wrap; gap: 12px; }
+.btn {
+  display: inline-flex; align-items: center; gap: 8px; padding: 11px 20px; border-radius: 999px;
+  font-family: var(--display); font-weight: 400; font-stretch: 95%; font-size: 15px; letter-spacing: .02em; text-decoration: none; border: 1px solid var(--navy);
+}
+.btn.primary { background: var(--navy); color: #fff; }
+.btn.primary:hover { background: var(--navy-2); }
+.btn.ghost { color: var(--navy); background: var(--bg); }
+.btn.ghost:hover { background: var(--tint); }
+.wafer-wrap { max-width: 400px; width: 100%; justify-self: center; }
+.wafer-wrap svg { display: block; width: 100%; height: auto; }
+.wafer-cap { font-family: var(--mono); font-weight: 300; font-size: 11px; color: var(--muted); letter-spacing: .08em; display: flex; justify-content: space-between; margin-top: 10px; gap: 12px; }
+.die { fill: var(--tint); stroke: var(--line); stroke-width: 1; transition: fill .6s ease; }
+.die.lit { fill: var(--ice); }
+.die.hot { fill: var(--navy); }
+.quick { display: grid; grid-template-columns: repeat(4, minmax(0, 1fr)); border-left: 1px solid var(--line); }
+.quick a { display: flex; flex-direction: column; gap: 4px; padding: 26px 24px; border-right: 1px solid var(--line); text-decoration: none; min-width: 0; }
+.quick a:hover { background: var(--tint); }
+.quick .k { font-family: var(--mono); font-weight: 300; font-size: 11px; letter-spacing: .12em; text-transform: uppercase; color: var(--muted); }
+.quick .v { font-family: var(--display); font-weight: 400; font-stretch: 92%; font-size: 19px; color: var(--navy); }
+.quick .v::after { content: " →"; color: var(--ice); }
+@media (max-width: 860px) {
+  .hero-grid { grid-template-columns: 1fr; padding-block: 52px 44px; gap: 36px; }
+  .wafer-wrap { max-width: 280px; }
+  .quick { grid-template-columns: repeat(2, minmax(0, 1fr)); border-left: 0; }
+  .quick a { border-bottom: 1px solid var(--line); }
+  .quick a:nth-child(2n) { border-right: 0; }
+}
+
+/* Facts */
+.facts { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); border-top: 1px solid var(--line); margin: 0; }
+.fact { padding: 18px 20px 4px 0; display: flex; flex-direction: column; gap: 2px; }
+.fact + .fact { padding-left: 20px; border-left: 1px solid var(--line); }
+.fact dt { font-family: var(--mono); font-weight: 300; font-size: 11px; letter-spacing: .1em; text-transform: uppercase; color: var(--muted); }
+.fact dd { margin: 0; font-family: var(--display); font-weight: 400; font-stretch: 95%; font-size: 18px; color: var(--navy); }
+@media (max-width: 560px) {
+  .facts { grid-template-columns: 1fr; }
+  .fact, .fact + .fact { padding: 14px 0; border-left: 0; border-bottom: 1px solid var(--line); }
+}
+
+/* Placeholder */
+.placeholder { border: 1px dashed #C9D2DF; border-radius: 12px; padding: 32px 26px; display: flex; gap: 18px; align-items: flex-start; max-width: 720px; }
+.ph-icon { width: 40px; height: 40px; border-radius: 10px; background: var(--ice-soft); color: var(--navy); display: grid; place-items: center; flex: none; }
+.ph-icon svg { width: 20px; height: 20px; }
+.placeholder h3 { margin: 0 0 4px; font-size: 17px; color: var(--navy); font-weight: 500; }
+.placeholder p { margin: 0; color: var(--muted); font-size: 15px; }
+.status { display: inline-block; font-family: var(--mono); font-weight: 400; font-size: 11px; letter-spacing: .06em; padding: 1px 8px; border-radius: 999px; background: var(--ice-soft); color: var(--navy-2); margin-left: 8px; vertical-align: 2px; }
+
+/* Cards */
+.cards { display: grid; grid-template-columns: repeat(auto-fill, minmax(260px, 1fr)); gap: 16px; }
+.card { border: 1px dashed #C9D2DF; border-radius: 12px; padding: 20px; display: flex; flex-direction: column; gap: 10px; min-width: 0; }
+.card .meta { display: flex; justify-content: space-between; gap: 8px; font-family: var(--mono); font-weight: 300; font-size: 12px; color: var(--muted); }
+.tag { background: var(--ice-soft); color: var(--navy-2); padding: 0 8px; border-radius: 4px; }
+.card h4 { margin: 0; font-size: 17px; line-height: 1.45; color: var(--ink); font-weight: 500; }
+.card p { margin: 0; font-size: 14px; color: var(--muted); }
+.sample-badge { font-family: var(--mono); font-weight: 400; font-size: 10px; letter-spacing: .12em; text-transform: uppercase; color: var(--navy-2); }
+.card .foot { margin-top: auto; padding-top: 8px; border-top: 1px solid var(--line); font-size: 13px; color: var(--muted); display: flex; justify-content: space-between; gap: 8px; }
+
+/* People */
+.people { display: grid; grid-template-columns: repeat(auto-fill, minmax(160px, 1fr)); gap: 12px; }
+.person { border: 1px solid var(--line); border-radius: 12px; padding: 18px; display: flex; flex-direction: column; align-items: flex-start; gap: 6px; }
+.avatar { width: 44px; height: 44px; border-radius: 50%; background: var(--tint); border: 1px dashed #C9D2DF; margin-bottom: 4px; }
+.person b { font-size: 15px; color: var(--navy); font-weight: 500; }
+.person span { font-size: 13px; color: var(--muted); }
+
+/* Join */
+.join { background: var(--navy); color: #fff; border-radius: 16px; padding: 40px 36px; display: grid; grid-template-columns: minmax(0, 1fr) auto; gap: 28px; align-items: center; }
+.join h3 { font-family: var(--display); font-stretch: 92%; font-weight: 300; font-size: clamp(24px, 3vw, 32px); margin: 0 0 8px; line-height: 1.2; }
+.join p { margin: 0; color: #BFCBE3; max-width: 34em; }
+.join .btn { background: var(--ice); color: var(--navy); border-color: var(--ice); cursor: default; }
+@media (max-width: 720px) { .join { grid-template-columns: 1fr; padding: 30px 24px; } }
+
+/* Contact */
+.contact-grid { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 16px; margin: 0; }
+.contact-item { border: 1px solid var(--line); border-radius: 12px; padding: 20px; min-width: 0; }
+.contact-item dt { font-family: var(--mono); font-weight: 300; font-size: 11px; letter-spacing: .1em; text-transform: uppercase; color: var(--muted); margin-bottom: 6px; }
+.contact-item dd { margin: 0; font-size: 15px; color: var(--ink); overflow-wrap: anywhere; }
+.contact-item dd.empty { color: var(--muted); }
+@media (max-width: 720px) { .contact-grid { grid-template-columns: 1fr; } }
+
+footer { border-top: 1px solid var(--line); padding-block: 36px; }
+.foot-row { display: flex; flex-wrap: wrap; justify-content: space-between; align-items: center; gap: 16px; }
+.foot-row small { color: var(--muted); font-size: 13px; }
+</style>
+
+<header class="site-header">
+  <div class="wrap nav">
+    <a class="brand" href="#home" aria-label="HISEM 홈">
+      <svg viewBox="0 0 32 32" aria-hidden="true">
+        <path d="M9.6 28.8A13.4 13.4 0 1 1 22.4 28.8Z" fill="#0E1E3F"/>
+        <g fill="#FFFFFF" opacity=".22">
+          <rect x="8" y="8" width="4.4" height="4.4" rx=".6"/><rect x="13.8" y="8" width="4.4" height="4.4" rx=".6"/><rect x="19.6" y="8" width="4.4" height="4.4" rx=".6"/>
+          <rect x="8" y="13.8" width="4.4" height="4.4" rx=".6"/><rect x="19.6" y="13.8" width="4.4" height="4.4" rx=".6"/>
+          <rect x="8" y="19.6" width="4.4" height="4.4" rx=".6"/><rect x="13.8" y="19.6" width="4.4" height="4.4" rx=".6"/><rect x="19.6" y="19.6" width="4.4" height="4.4" rx=".6"/>
+        </g>
+        <rect x="13.8" y="13.8" width="4.4" height="4.4" rx=".6" fill="#7FD0F5"/>
+      </svg>
+      <span class="wordmark">HISEM</span>
+    </a>
+    <button class="menu-btn" id="menu-btn" aria-label="메뉴 열기" aria-expanded="false" aria-controls="menu">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round"><path d="M4 7h16M4 12h16M4 17h16"/></svg>
+    </button>
+    <ul class="menu" id="menu" data-open="false"></ul>
+  </div>
+</header>
+
+<main>
+  <!-- HOME -->
+  <section class="view" id="v-home" data-view="home">
+    <div class="hero">
+      <div class="wrap hero-grid">
+        <div>
+          <p class="eyebrow"><span>Hongik Univ.</span><span>Semiconductor Society</span><span>Est. 2026</span></p>
+          <h1>From Atoms <span class="it">to</span> <mark>Wafers</mark></h1>
+          <p class="lede"><strong>원자에서 웨이퍼까지.</strong> 소재의 언어로 반도체를 공부하는 홍익대학교 신소재공학과 반도체 학술 동아리, HISEM입니다.</p>
+          <div class="btns">
+            <a class="btn primary" href="#introduction">학회 소개</a>
+            <a class="btn ghost" href="#recruitment">Join Us</a>
+          </div>
+        </div>
+        <div class="wafer-wrap">
+          <svg viewBox="0 0 400 400" role="img" aria-label="다이 격자가 그려진 웨이퍼 일러스트">
+            <defs><clipPath id="wclip"><path d="M128 386A190 190 0 1 1 272 386Z"/></clipPath></defs>
+            <path d="M128 386A190 190 0 1 1 272 386Z" fill="#FFFFFF"/>
+            <g id="dies" clip-path="url(#wclip)"></g>
+            <path d="M128 386A190 190 0 1 1 272 386Z" fill="none" stroke="#0E1E3F" stroke-width="1.5"/>
+          </svg>
+          <div class="wafer-cap"><span>Si (100) · Ø300 mm</span><span id="die-count">— dies</span></div>
+        </div>
+      </div>
+    </div>
+    <div class="wrap">
+      <nav class="quick" aria-label="바로가기">
+        <a href="#activity"><span class="k">Archive</span><span class="v">활동내용</span></a>
+        <a href="#publication"><span class="k">Archive</span><span class="v">Publication</span></a>
+        <a href="#contest"><span class="k">Archive</span><span class="v">공모전</span></a>
+        <a href="#external"><span class="k">Archive</span><span class="v">대외활동</span></a>
+      </nav>
+    </div>
+  </section>
+
+  <!-- ABOUT -->
+  <section class="view" data-view="introduction" hidden>
+    <div class="page-body"><div class="wrap">
+      <p class="lead">홍익대학교 신소재공학과 반도체 학술 동아리</p>
+      <dl class="facts">
+        <div class="fact"><dt>Name</dt><dd>HISEM <span class="status">가칭</span></dd></div>
+        <div class="fact"><dt>Founded</dt><dd>2026</dd></div>
+        <div class="fact"><dt>Based at</dt><dd>홍익대학교 신소재공학과</dd></div>
+      </dl>
+    </div></div>
+  </section>
+
+  <section class="view" data-view="professor" hidden>
+    <div class="page-body"><div class="wrap">
+      <div class="placeholder">
+        <div class="ph-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="8" r="4"/><path d="M4 21c1.5-4 4.5-6 8-6s6.5 2 8 6"/></svg></div>
+        <div><h3>지도교수 소개 <span class="status">준비 중</span></h3><p>지도교수님 정보는 확정되는 대로 업데이트됩니다.</p></div>
+      </div>
+    </div></div>
+  </section>
+
+  <!-- ACTIVITIES -->
+  <section class="view" data-view="curriculum" hidden>
+    <div class="page-body"><div class="wrap">
+      <div class="placeholder">
+        <div class="ph-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><path d="M4 5h16v14H4z"/><path d="M8 9h8M8 13h5"/></svg></div>
+        <div><h3>학기 커리큘럼 <span class="status">준비 중</span></h3><p>스터디 트랙, 세미나 일정 등 학기별 커리큘럼을 정리하고 있습니다.</p></div>
+      </div>
+    </div></div>
+  </section>
+
+  <!-- ARCHIVE -->
+  <section class="view" data-view="activity" hidden>
+    <div class="page-body"><div class="wrap">
+      <p class="lead">정기 스터디, 세미나, 학회 행사 기록이 이곳에 쌓입니다.</p>
+      <div class="cards">
+        <article class="card">
+          <span class="sample-badge">예시 카드</span>
+          <div class="meta"><span>2026.11</span><span class="tag">Seminar</span></div>
+          <h4>활동 제목이 들어갑니다</h4>
+          <p>날짜, 활동 유형, 한두 줄 요약, 사진을 함께 올릴 수 있습니다.</p>
+        </article>
+      </div>
+    </div></div>
+  </section>
+
+  <section class="view" data-view="publication" hidden>
+    <div class="page-body"><div class="wrap">
+      <p class="lead">학기마다 발간하는 HISEM Report를 PDF로 공개합니다.</p>
+      <div class="cards">
+        <article class="card">
+          <span class="sample-badge">예시 카드</span>
+          <div class="meta"><span>HISEM Report No.01</span><span class="tag">공정</span></div>
+          <h4>보고서 제목이 들어갑니다</h4>
+          <p>분야 태그와 작성자, 발간 학기를 표시하고 PDF로 연결합니다.</p>
+          <div class="foot"><span>작성자</span><span>2027-1학기 · PDF</span></div>
+        </article>
+      </div>
+    </div></div>
+  </section>
+
+  <section class="view" data-view="contest" hidden>
+    <div class="page-body"><div class="wrap">
+      <p class="lead">학회원이 참가한 공모전과 수상 기록입니다.</p>
+      <div class="cards">
+        <article class="card">
+          <span class="sample-badge">예시 카드</span>
+          <div class="meta"><span>2026.12</span><span class="tag">수상</span></div>
+          <h4>공모전 이름이 들어갑니다</h4>
+          <p>참가 팀, 주제, 결과를 적습니다.</p>
+          <div class="foot"><span>참가자</span><span>결과</span></div>
+        </article>
+      </div>
+    </div></div>
+  </section>
+
+  <section class="view" data-view="external" hidden>
+    <div class="page-body"><div class="wrap">
+      <p class="lead">박람회 견학, 연합 세션, 기업 탐방 같은 학교 밖 활동입니다.</p>
+      <div class="cards">
+        <article class="card">
+          <span class="sample-badge">예시 카드</span>
+          <div class="meta"><span>2027.02</span><span class="tag">견학</span></div>
+          <h4>대외활동 이름이 들어갑니다</h4>
+          <p>장소, 참여 인원, 후기를 함께 기록합니다.</p>
+        </article>
+      </div>
+    </div></div>
+  </section>
+
+  <!-- MEMBERS -->
+  <section class="view" data-view="executive" hidden>
+    <div class="page-body"><div class="wrap">
+      <p class="lead">HISEM 운영진 <span class="status">업데이트 예정</span></p>
+      <div class="people">
+        <div class="person"><div class="avatar"></div><b>회장</b><span>이름 · 학과</span></div>
+        <div class="person"><div class="avatar"></div><b>부회장</b><span>이름 · 학과</span></div>
+        <div class="person"><div class="avatar"></div><b>학술부장</b><span>이름 · 학과</span></div>
+        <div class="person"><div class="avatar"></div><b>홍보부장</b><span>이름 · 학과</span></div>
+      </div>
+    </div></div>
+  </section>
+
+  <section class="view" data-view="member" hidden>
+    <div class="page-body"><div class="wrap">
+      <div class="placeholder">
+        <div class="ph-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><circle cx="9" cy="8" r="3.5"/><path d="M2.5 20c1-3.5 3.5-5 6.5-5s5.5 1.5 6.5 5"/><circle cx="17" cy="9" r="2.5"/><path d="M17 14c2.3 0 4 1.3 4.8 4"/></svg></div>
+        <div><h3>학회원 명단 <span class="status">1기 모집 후 공개</span></h3><p>기수별 학회원 명단이 이곳에 정리됩니다.</p></div>
+      </div>
+    </div></div>
+  </section>
+
+  <!-- JOIN US -->
+  <section class="view" data-view="recruitment" hidden>
+    <div class="page-body"><div class="wrap">
+      <div class="join">
+        <div>
+          <h3>1기 모집 안내가 곧 열립니다</h3>
+          <p>모집은 매 학기 초에 진행할 예정입니다. 일정과 지원 방법은 확정되는 대로 이곳에 공지합니다.</p>
+        </div>
+        <span class="btn">지원서 준비 중</span>
+      </div>
+      <dl class="facts">
+        <div class="fact"><dt>자격</dt><dd>추후 공지</dd></div>
+        <div class="fact"><dt>모집 시기</dt><dd>매 학기 초 (예정)</dd></div>
+        <div class="fact"><dt>전형</dt><dd>추후 공지</dd></div>
+      </dl>
+    </div></div>
+  </section>
+
+  <section class="view" data-view="contact" hidden>
+    <div class="page-body"><div class="wrap">
+      <dl class="contact-grid">
+        <div class="contact-item"><dt>Email</dt><dd class="empty">추후 공개</dd></div>
+        <div class="contact-item"><dt>Instagram</dt><dd class="empty">추후 공개</dd></div>
+        <div class="contact-item"><dt>Address</dt><dd>서울특별시 마포구 와우산로 94<br>홍익대학교 신소재공학과</dd></div>
+      </dl>
+    </div></div>
+  </section>
+</main>
+
+<footer>
+  <div class="wrap foot-row">
+    <a class="brand" href="#home" aria-label="홈으로">
+      <svg viewBox="0 0 32 32" aria-hidden="true">
+        <path d="M9.6 28.8A13.4 13.4 0 1 1 22.4 28.8Z" fill="#0E1E3F"/>
+        <rect x="13.8" y="13.8" width="4.4" height="4.4" rx=".6" fill="#7FD0F5"/>
+      </svg>
+      <span class="wordmark">HISEM</span>
+    </a>
+    <small>© 2026 HISEM · Hongik University Semiconductor Society</small>
+  </div>
+</footer>
+
+<script>
+(function () {
+  // Site map: top menu → sub-pages. Each sub-page id is also its #hash.
+  var SITE = [
+    { label: 'About', items: [['introduction', 'Introduction'], ['professor', 'Professor']] },
+    { label: 'Activities', items: [['curriculum', 'Curriculum']] },
+    { label: 'Archive', items: [['activity', '활동내용'], ['publication', 'Publication'], ['contest', '공모전'], ['external', '대외활동']] },
+    { label: 'Members', items: [['executive', 'Executive'], ['member', 'Member']] },
+    { label: 'Join Us', items: [['recruitment', 'Recruitment'], ['contact', 'Contact']] }
+  ];
+  var chevron = '<svg viewBox="0 0 10 10" fill="none" stroke="currentColor" stroke-width="1.3"><path d="M2 3.5l3 3 3-3"/></svg>';
+  var menu = document.getElementById('menu');
+  var lookup = {};
+
+  SITE.forEach(function (sec, si) {
+    var li = document.createElement('li');
+    var html = '<button class="top" type="button" aria-expanded="false" aria-controls="drop-' + si + '">' + sec.label + chevron + '</button><ul class="drop" id="drop-' + si + '">';
+    sec.items.forEach(function (it) {
+      lookup[it[0]] = { section: sec, title: it[1], index: si };
+      html += '<li><a href="#' + it[0] + '" data-id="' + it[0] + '">' + it[1] + '</a></li>';
+    });
+    li.innerHTML = html + '</ul>';
+    menu.appendChild(li);
+  });
+
+  // Build a page header (breadcrumb, title, sibling tabs) for every sub-page view
+  Object.keys(lookup).forEach(function (id) {
+    var view = document.querySelector('[data-view="' + id + '"]');
+    if (!view) return;
+    var info = lookup[id];
+    var head = document.createElement('div');
+    head.className = 'page-head';
+    var tabs = info.section.items.map(function (it) {
+      return '<a href="#' + it[0] + '"' + (it[0] === id ? ' class="current" aria-current="page"' : '') + '>' + it[1] + '</a>';
+    }).join('');
+    head.innerHTML = '<div class="wrap"><p class="crumb"><span>Home</span><span>' + info.section.label + '</span><span>' + info.title + '</span></p><h1>' + info.title + '</h1><nav class="subtabs" aria-label="' + info.section.label + ' 하위 메뉴">' + tabs + '</nav></div>';
+    view.insertBefore(head, view.firstChild);
+  });
+
+  var tops = Array.prototype.slice.call(menu.querySelectorAll('.top'));
+  function closeAll(except) {
+    tops.forEach(function (b) {
+      if (b === except) return;
+      b.parentNode.classList.remove('open'); b.setAttribute('aria-expanded', 'false');
+    });
+  }
+  tops.forEach(function (b) {
+    b.addEventListener('click', function () {
+      var li = b.parentNode, open = !li.classList.contains('open');
+      closeAll(b);
+      li.classList.toggle('open', open); b.setAttribute('aria-expanded', String(open));
+    });
+  });
+  document.addEventListener('click', function (e) { if (!menu.contains(e.target)) closeAll(); });
+  document.addEventListener('keydown', function (e) { if (e.key === 'Escape') closeAll(); });
+
+  var menuBtn = document.getElementById('menu-btn');
+  function setMobile(open) { menu.setAttribute('data-open', String(open)); menuBtn.setAttribute('aria-expanded', String(open)); }
+  menuBtn.addEventListener('click', function () { setMobile(menu.getAttribute('data-open') !== 'true'); });
+
+  // Router
+  var views = Array.prototype.slice.call(document.querySelectorAll('.view'));
+  function route() {
+    var id = (location.hash || '').slice(1);
+    if (!lookup[id]) id = 'home';
+    views.forEach(function (v) { v.hidden = v.getAttribute('data-view') !== id; });
+    menu.querySelectorAll('.drop a').forEach(function (a) {
+      var on = a.getAttribute('data-id') === id;
+      a.classList.toggle('current', on);
+      if (on) a.setAttribute('aria-current', 'page'); else a.removeAttribute('aria-current');
+    });
+    tops.forEach(function (b, i) { b.classList.toggle('current', id !== 'home' && lookup[id].index === i); });
+    closeAll(); setMobile(false);
+    if (document.activeElement && menu.contains(document.activeElement)) document.activeElement.blur();
+    window.scrollTo(0, 0);
+    document.title = id === 'home' ? 'HISEM' : lookup[id].title + ' · HISEM';
+  }
+  window.addEventListener('hashchange', route);
+  route();
+
+  // Wafer die map
+  var g = document.getElementById('dies');
+  var NS = 'http://www.w3.org/2000/svg';
+  var size = 26, gap = 4, step = size + gap, cx = 200, cy = 200, r = 186, dies = [];
+  for (var y = cy - 7 * step + gap / 2; y < cy + 7 * step; y += step) {
+    for (var x = cx - 7 * step + gap / 2; x < cx + 7 * step; x += step) {
+      var c = [[x, y], [x + size, y], [x, y + size], [x + size, y + size]];
+      if (!c.every(function (p) { return Math.hypot(p[0] - cx, p[1] - cy) < r && p[1] < 380; })) continue;
+      var rect = document.createElementNS(NS, 'rect');
+      rect.setAttribute('x', x); rect.setAttribute('y', y);
+      rect.setAttribute('width', size); rect.setAttribute('height', size); rect.setAttribute('rx', 2);
+      rect.setAttribute('class', 'die');
+      g.appendChild(rect); dies.push(rect);
+    }
+  }
+  document.getElementById('die-count').textContent = dies.length + ' dies';
+  [0.18, 0.33, 0.47, 0.71, 0.86].forEach(function (s) { dies[Math.floor(s * dies.length)].classList.add('lit'); });
+  dies[Math.floor(0.5 * dies.length)].classList.add('hot');
+  var reduce = window.matchMedia && window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+  if (!reduce) setInterval(function () {
+    var d = dies[Math.floor(Math.random() * dies.length)];
+    if (!d.classList.contains('hot')) d.classList.toggle('lit');
+  }, 450);
+})();
+</script>
