@@ -287,6 +287,12 @@ b, strong { font-weight: 500; }
 
 /* People */
 .people { display: grid; grid-template-columns: repeat(auto-fill, minmax(160px, 1fr)); gap: 12px; }
+.lead + .cohort { margin-top: 40px; }
+.cohort + .cohort { margin-top: 56px; }
+.cohort-head { display: flex; flex-wrap: wrap; align-items: baseline; gap: 6px 14px; padding-bottom: 14px; margin-bottom: 20px; border-bottom: 1px solid var(--line); }
+.cohort-head h2 { margin: 0; font-family: var(--body); font-weight: 500; font-size: 26px; line-height: 1.2; color: var(--navy); }
+.cohort-head span { font-family: var(--mono); font-weight: 300; font-size: 12px; letter-spacing: .1em; text-transform: uppercase; color: var(--muted); }
+.cohort-head .cohort-n { margin-left: auto; letter-spacing: .04em; }
 .person { border: 1px solid var(--line); border-radius: 12px; padding: 18px; display: flex; flex-direction: column; align-items: flex-start; gap: 6px; }
 .avatar { width: 52px; height: 52px; border-radius: 50%; background: #D3DBE6 url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 44 44'%3E%3Ccircle cx='22' cy='17' r='8' fill='%23fff'/%3E%3Cpath d='M6 44c0-9.5 7.2-15.5 16-15.5S38 34.5 38 44z' fill='%23fff'/%3E%3C/svg%3E") center / 100% 100% no-repeat; overflow: hidden; margin-bottom: 4px; }
 .person b { font-size: 15px; color: var(--navy); font-weight: 500; }
@@ -503,6 +509,9 @@ footer { border-top: 1px solid var(--line); padding-block: 36px; }
   <section class="view" data-view="member" hidden>
     <div class="page-body"><div class="wrap">
       <p class="lead">HISEM과 함께 공부하는 멤버들입니다.</p>
+      <!-- 새 기수는 이 블록을 복사해 맨 위에 추가 (최신 기수가 위로) -->
+      <div class="cohort">
+      <div class="cohort-head"><h2>1기</h2><span>1st Cohort · 2026</span><span class="cohort-n">12명</span></div>
       <div class="people">
         <div class="person"><div class="avatar" aria-hidden="true"></div><b>박다운</b><span>신소재공학과</span></div>
         <div class="person"><div class="avatar" aria-hidden="true"></div><b>오원규</b><span>신소재공학과</span></div>
@@ -516,6 +525,7 @@ footer { border-top: 1px solid var(--line); padding-block: 36px; }
         <div class="person"><div class="avatar" aria-hidden="true"></div><b>차진표</b><span>신소재공학과</span></div>
         <div class="person"><div class="avatar" aria-hidden="true"></div><b>최민서</b><span>신소재공학과</span></div>
         <div class="person"><div class="avatar" aria-hidden="true"></div><b>한수빈</b><span>신소재공학과</span></div>
+      </div>
       </div>
     </div></div>
   </section>
