@@ -4,7 +4,26 @@
 <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
 <title>HISEM</title>
 <meta name="claude:viewport-fit-sides" content="cover">
-<meta name="description" content="HISEM · 홍익대학교 신소재공학과 반도체 학술 동아리">
+<meta name="description" content="홍익대학교 신소재공학과 반도체 학술 동아리 HISEM. 소재에서 출발해 공정, 소자, 산업 트렌드까지 함께 공부합니다.">
+<link rel="canonical" href="https://oh519.github.io/hisem/">
+<link rel="icon" href="assets/favicon.svg" type="image/svg+xml">
+<link rel="icon" href="assets/favicon-32.png" sizes="32x32" type="image/png">
+<link rel="apple-touch-icon" href="assets/apple-touch-icon.png">
+<meta name="theme-color" content="#FFFFFF">
+<meta property="og:type" content="website">
+<meta property="og:site_name" content="HISEM">
+<meta property="og:locale" content="ko_KR">
+<meta property="og:url" content="https://oh519.github.io/hisem/">
+<meta property="og:title" content="HISEM · 홍익대학교 반도체 학술 동아리">
+<meta property="og:description" content="홍익대학교 신소재공학과 반도체 학술 동아리 HISEM. 소재에서 출발해 공정, 소자, 산업 트렌드까지 함께 공부합니다.">
+<meta property="og:image" content="https://oh519.github.io/hisem/assets/og.jpg">
+<meta property="og:image:width" content="1200">
+<meta property="og:image:height" content="630">
+<meta property="og:image:alt" content="3D 실리콘 웨이퍼와 Small Scale, Big Impact 문구가 담긴 HISEM 소개 이미지">
+<meta name="twitter:card" content="summary_large_image">
+<meta name="twitter:title" content="HISEM · 홍익대학교 반도체 학술 동아리">
+<meta name="twitter:description" content="홍익대학교 신소재공학과 반도체 학술 동아리 HISEM. 소재에서 출발해 공정, 소자, 산업 트렌드까지 함께 공부합니다.">
+<meta name="twitter:image" content="https://oh519.github.io/hisem/assets/og.jpg">
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Archivo:wdth,wght@62..125,200..700&family=IBM+Plex+Mono:wght@300;400&family=IBM+Plex+Sans+KR:wght@300;400;500&display=swap">
@@ -315,9 +334,17 @@ b, strong { font-weight: 500; }
 .contact-item dd a:hover { border-bottom-color: var(--navy); }
 @media (max-width: 720px) { .contact-grid { grid-template-columns: 1fr; } }
 
-footer { border-top: 1px solid var(--line); padding-block: 36px; }
-.foot-row { display: flex; flex-wrap: wrap; justify-content: space-between; align-items: center; gap: 16px; }
-.foot-row small { color: var(--muted); font-size: 13px; }
+footer { border-top: 1px solid var(--line); padding-block: 56px 32px; }
+.foot-grid { display: grid; grid-template-columns: minmax(0, 1fr) auto; gap: 40px; align-items: start; }
+.foot-nav { display: grid; grid-template-columns: repeat(5, auto); gap: 28px 56px; }
+.foot-col h2 { margin: 0 0 12px; font-family: var(--mono); font-weight: 400; font-size: 11px; letter-spacing: .12em; text-transform: uppercase; color: var(--navy); }
+.foot-col ul { list-style: none; margin: 0; padding: 0; display: flex; flex-direction: column; gap: 8px; }
+.foot-col a { font-size: 14px; color: var(--muted); text-decoration: none; }
+.foot-col a:hover { color: var(--navy); }
+.foot-bottom { margin-top: 44px; }
+.foot-bottom small { display: block; padding-top: 20px; border-top: 1px solid var(--line); color: var(--muted); font-size: 13px; }
+@media (max-width: 960px) { .foot-grid { grid-template-columns: 1fr; } .foot-nav { grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 28px 24px; } }
+@media (max-width: 520px) { .foot-nav { grid-template-columns: repeat(2, minmax(0, 1fr)); } }
 </style>
 
 <header class="site-header">
@@ -569,7 +596,7 @@ footer { border-top: 1px solid var(--line); padding-block: 36px; }
 </main>
 
 <footer>
-  <div class="wrap foot-row">
+  <div class="wrap foot-grid">
     <a class="brand" href="#home" aria-label="홈으로">
       <svg viewBox="0 0 32 32" aria-hidden="true">
         <path d="M9.6 28.8A13.4 13.4 0 1 1 22.4 28.8Z" fill="#0E1E3F"/>
@@ -577,6 +604,9 @@ footer { border-top: 1px solid var(--line); padding-block: 36px; }
       </svg>
       <span class="wordmark">HISEM</span>
     </a>
+    <nav class="foot-nav" id="foot-nav" aria-label="사이트 메뉴"></nav>
+  </div>
+  <div class="wrap foot-bottom">
     <small>© 2026 HISEM · Hongik University Semiconductor Society</small>
   </div>
 </footer>
@@ -605,6 +635,14 @@ footer { border-top: 1px solid var(--line); padding-block: 36px; }
     li.innerHTML = html + '</ul>';
     menu.appendChild(li);
   });
+
+  // Footer: same site map as the top menu
+  var footNav = document.getElementById('foot-nav');
+  if (footNav) footNav.innerHTML = SITE.map(function (sec) {
+    return '<div class="foot-col"><h2>' + sec.label + '</h2><ul>' + sec.items.map(function (it) {
+      return '<li><a href="#' + it[0] + '">' + it[1] + '</a></li>';
+    }).join('') + '</ul></div>';
+  }).join('');
 
   // Build a page header (breadcrumb, title, sibling tabs) for every sub-page view
   Object.keys(lookup).forEach(function (id) {
