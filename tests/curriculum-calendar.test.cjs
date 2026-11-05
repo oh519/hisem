@@ -1,6 +1,32 @@
 const test = require('node:test');
 const assert = require('node:assert/strict');
 const calendar = require('../curriculum-calendar.js');
+const fs = require('node:fs');
+const vm = require('node:vm');
+const fallbackContext = { window: {} };
+vm.runInNewContext(fs.readFileSync(require.resolve('../data/academic-calendar-fallback.js'), 'utf8'), fallbackContext);
+const fallback = fallbackContext.window.HISEM_ACADEMIC_FALLBACK;
+
+test('a blocked JSON request keeps real dated events and month notices from the bundled snapshot', async () => {
+  const result = await calendar.loadAcademicSnapshot(() => Promise.reject(new Error('Failed to fetch')), fallback);
+  assert.equal(result.saved, true);
+  assert.equal(calendar.eventsOn(calendar.academicEvents(result.data), '2026-12-15').length, 2);
+  assert.equal(calendar.noticesInMonth(result.data.notices, '2026-11').length, 3);
+  assert.ok(result.data.fetchedAt);
+});
+
+test('HTTP errors, invalid JSON and empty data fall back, while fresh valid data wins', async () => {
+  for (const response of [
+    { ok: false },
+    { ok: true, json: async () => { throw new SyntaxError('Not JSON'); } },
+    { ok: true, json: async () => ({ schemaVersion: 1, events: [] }) }
+  ]) assert.equal((await calendar.loadAcademicSnapshot(async () => response, fallback)).saved, true);
+  const fresh = { ...fallback, fetchedAt: '2026-11-06T00:00:00Z' };
+  const result = await calendar.loadAcademicSnapshot(async () => ({ ok: true, json: async () => fresh }), fallback);
+  assert.equal(result.saved, false);
+  assert.equal(result.data, fresh);
+  await assert.rejects(calendar.loadAcademicSnapshot(async () => ({ ok: false }), null));
+});
 
 test('calendar handles leap February and month-spanning weeks with 42 unique dates', () => {
   const cells = calendar.monthCells(2024, 1);

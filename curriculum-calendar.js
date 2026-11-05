@@ -36,12 +36,24 @@
   function noticesInMonth(notices, month) {
     return notices.filter(function (notice) { return /^\d{4}-\d{2}$/.test(notice.startMonth) && /^\d{4}-\d{2}$/.test(notice.endMonth) && validDate(notice.startMonth + '-01') && validDate(notice.endMonth + '-01') && notice.startMonth <= month && month <= notice.endMonth && typeof notice.title === 'string' && notice.title.trim(); });
   }
-  if (typeof module === 'object' && module.exports) module.exports = { monthCells: monthCells, moveMonth: moveMonth, validDate: validDate, eventsOn: eventsOn, academicEvents: academicEvents, noticesInMonth: noticesInMonth };
+  function loadAcademicSnapshot(fetcher, fallback) {
+    return Promise.resolve().then(function () { return fetcher('data/academic-calendar.json', { cache: 'no-cache' }); }).then(function (response) {
+      if (!response.ok) throw new Error('Calendar snapshot unavailable');
+      return response.json();
+    }).then(function (data) {
+      if (!academicEvents(data).length) throw new Error('Invalid calendar snapshot');
+      return { data: data, saved: false };
+    }).catch(function (error) {
+      if (academicEvents(fallback).length) return { data: fallback, saved: true };
+      throw error;
+    });
+  }
+  if (typeof module === 'object' && module.exports) module.exports = { monthCells: monthCells, moveMonth: moveMonth, validDate: validDate, eventsOn: eventsOn, academicEvents: academicEvents, noticesInMonth: noticesInMonth, loadAcademicSnapshot: loadAcademicSnapshot };
   if (typeof document === 'undefined') return;
   var body = document.getElementById('calendar-days');
   if (!body) return;
   var events = Array.isArray(window.HISEM_CURRICULUM_EVENTS) ? window.HISEM_CURRICULUM_EVENTS : [];
-  var manualEvents = events.slice(), monthNotices = [];
+  var manualEvents = events.slice(), monthNotices = [], academicState = 'loading';
   var calendar = body.closest('.curriculum-calendar');
   var academicInfo = document.createElement('div'); academicInfo.className = 'calendar-academic-info';
   var sourceNote = document.createElement('p'); sourceNote.className = 'calendar-source-note'; sourceNote.setAttribute('aria-live', 'polite');
@@ -63,7 +75,7 @@
     agenda.replaceChildren();
     var items = eventsOn(events, selected);
     if (!items.length) {
-      var empty = document.createElement('p'); empty.className = 'calendar-empty'; empty.textContent = '이날은 등록된 일정이 없습니다.'; agenda.appendChild(empty); return;
+      var empty = document.createElement('p'); empty.className = 'calendar-empty'; empty.textContent = academicState === 'loading' ? '학사일정을 확인하고 있습니다.' : academicState === 'error' ? '학사일정을 불러오지 못해 이 날짜의 일정을 확인할 수 없습니다.' : academicState === 'saved' ? '저장된 학사일정에는 이 날짜의 일정이 없습니다.' : '이날은 날짜가 지정된 일정이 없습니다.'; agenda.appendChild(empty); return;
     }
     var list = document.createElement('ul'); list.className = 'calendar-event-list';
     items.forEach(function (event) {
@@ -124,20 +136,28 @@
   document.getElementById('calendar-prev').addEventListener('click', function () { select(moveMonth(selected, -1), false); });
   document.getElementById('calendar-next').addEventListener('click', function () { select(moveMonth(selected, 1), false); });
   document.getElementById('calendar-today').addEventListener('click', function () { select(today(), false); });
-  render(false);
-  fetch('data/academic-calendar.json', { cache: 'no-cache' }).then(function (response) {
-    if (!response.ok) throw new Error('Calendar snapshot unavailable');
-    return response.json();
-  }).then(function (data) {
+  function applyAcademicSnapshot(data, saved) {
     var academic = academicEvents(data);
-    if (!academic.length) throw new Error('Invalid calendar snapshot');
+    if (!academic.length) return;
+    academicState = saved ? 'saved' : 'ready';
     events = manualEvents.concat(academic); monthNotices = Array.isArray(data.notices) ? data.notices : [];
     sourceNote.replaceChildren();
     var sourceLink = document.createElement('a'); sourceLink.href = 'https://www.hongik.ac.kr/kr/education/academic-schedule001.do'; sourceLink.target = '_blank'; sourceLink.rel = 'noopener noreferrer'; sourceLink.textContent = '홍익대 공식 학사일정'; sourceNote.appendChild(sourceLink);
     var fetched = new Date(data.fetchedAt);
     if (!isNaN(fetched)) sourceNote.appendChild(document.createTextNode(' · ' + new Intl.DateTimeFormat('ko-KR', { timeZone: 'Asia/Seoul', year: 'numeric', month: 'numeric', day: 'numeric' }).format(fetched) + ' 확인'));
+    if (saved) sourceNote.appendChild(document.createTextNode(' · 저장된 학사일정 표시'));
     render(body.contains(document.activeElement));
+  }
+  render(false);
+  // Render a verified snapshot before requesting fresher data. A blocked JSON
+  // request must not empty the calendar or claim that a date has no events.
+  var fallback = window.HISEM_ACADEMIC_FALLBACK;
+  applyAcademicSnapshot(fallback, true);
+  loadAcademicSnapshot(window.fetch.bind(window), fallback).then(function (result) {
+    applyAcademicSnapshot(result.data, result.saved);
+    if (result.saved) sourceNote.appendChild(document.createTextNode(' · 최신 갱신 실패'));
   }).catch(function () {
+    academicState = 'error'; render(false);
     sourceNote.textContent = '학사일정을 불러오지 못했습니다. '; var link = document.createElement('a'); link.href = 'https://www.hongik.ac.kr/kr/education/academic-schedule001.do'; link.textContent = '공식 일정 확인'; link.target = '_blank'; link.rel = 'noopener noreferrer'; sourceNote.appendChild(link);
   });
 })();

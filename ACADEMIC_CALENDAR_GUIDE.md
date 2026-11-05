@@ -37,6 +37,10 @@ GitHub 기준: https://docs.github.com/en/actions/reference/workflows-and-action
 
 ## 검사
 
+2026-11-06 로딩 실패 복구: `data/academic-calendar-fallback.js`에 검증한 공식 일정 사본을 함께 포함한다. 먼저 이 사본을 표시하고 JSON 요청에 성공하면 최신 자료로 교체한다. JSON 통신/HTTP/파싱/빈 응답 실패 시 사본과 실제 확인 날짜·최신 갱신 실패 상태를 표시한다. 사본은 2026-11-05 확인 자료이며 자동 갱신 성공을 뜻하지 않는다. 예약 작업은 기존처럼 JSON만 갱신한다. 홈페이지에 새 자료 사본을 묶을 때 이 JS도 원본 JSON에서 다시 생성한다. 두 자료 모두 없으면 일정이 없다고 단정하지 않고 확인 불가를 표시한다.
+
+JSON 요청을 의도적으로503으로 만드는 점검 서버에서12월15일 실제 일정2개·날짜 표시27개가 유지되는 것을 브라우저로 확인했다. 사용자의 원래 JSON 요청이 실패한 네트워크 원인 자체는 재현되지 않아 특정하지 않았다. 네트워크 거부/HTTP 오류/잘못된JSON/빈 데이터에 대한 회귀 검사를 추가했다.
+
 `python -m unittest discover -s tests -p 'test_academic_calendar.py'`
 
 `node --test tests/curriculum-calendar.test.cjs`
