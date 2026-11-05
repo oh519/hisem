@@ -1,0 +1,55 @@
+/* Four study fields. Text stays in document flow; art is scrubbed by scroll geometry. */
+#v-curriculum .study-journey { --journey-tint: #f0f4f8; padding-block: 92px 40px; color: var(--navy); background: var(--journey-tint); background-image: linear-gradient(#fff, transparent 420px); }
+#v-curriculum .journey-heading { display: flex; align-items: end; justify-content: space-between; gap: 30px; padding-bottom: 54px; }
+#v-curriculum .journey-kicker { margin: 0 0 22px; color: #6e8399; font-size: 11px; letter-spacing: .13em; }
+#v-curriculum .journey-heading h2 { margin: 0; color: var(--navy); font-size: clamp(32px, 3.1vw, 46px); font-weight: 300; line-height: 1.5; letter-spacing: -.045em; word-break: keep-all; }
+#v-curriculum .journey-curriculum, #v-curriculum .study-detail-link { display: inline-flex; align-items: center; justify-content: space-between; gap: 28px; min-height: 44px; color: #284b6d; text-decoration: none; font-size: 14px; border-bottom: 1px solid #aebfd0; }
+#v-curriculum .journey-curriculum { flex: none; }
+#v-curriculum .journey-layout { position: relative; }
+#v-curriculum .journey-visuals { display: none; }
+#v-curriculum .study-scene { display: grid; grid-template-columns: 1fr 1.2fr; align-items: center; gap: 56px; min-height: 720px; padding-block: 50px; scroll-margin-top: 148px; }
+#v-curriculum .study-copy { min-width: 0; }
+#v-curriculum .study-field-number { margin: 0 0 26px; color: #a4b5c6; font-size: clamp(76px, 8vw, 110px); line-height: 1; letter-spacing: -.065em; font-weight: 300; }
+#v-curriculum .study-field-number span { font-size: 14px; letter-spacing: .04em; color: #8092a6; margin-left: 14px; }
+#v-curriculum .study-english { margin: 0 0 10px; color: #617d98; font-size: 15px; letter-spacing: .02em; }
+#v-curriculum .study-scene h3 { margin: 0 0 22px; font-size: clamp(30px, 3.1vw, 46px); font-weight: 400; line-height: 1.4; letter-spacing: -.045em; color: var(--navy); word-break: keep-all; }
+#v-curriculum .study-one-line { margin: 0 0 16px; font-size: 18px; color: #345471; word-break: keep-all; line-height: 1.7; }
+#v-curriculum .study-description { margin: 0 0 24px; max-width: 27em; font-size: 15px; color: #62748a; line-height: 1.95; word-break: keep-all; }
+#v-curriculum .study-keywords { margin: 0 0 30px; color: #8296ab; font-size: 11px; line-height: 1.9; }
+#v-curriculum .study-detail-link { font-size: 13px; }
+#v-curriculum .scene-media { position: relative; margin: 0; min-width: 0; height: clamp(400px, 56vw, 650px); border-radius: 18px; background: #e7edf2; box-shadow: 0 24px 64px -36px #445d7c66; }
+#v-curriculum .scene-primary { display: block; width: 100%; height: 100%; object-fit: cover; border-radius: inherit; }
+#v-curriculum .scene-media.media-cutout { background: transparent; border: 0; border-radius: 0; box-shadow: none; }
+#v-curriculum .scene-media.media-cutout .scene-primary { object-fit: contain; object-position: center; padding: clamp(8px, 2vw, 24px); border-radius: 0; filter: drop-shadow(0 20px 24px #18314a1c); }
+#v-curriculum .study-detail-link:focus-visible, #v-curriculum .journey-curriculum:focus-visible { outline: 2px solid #337da3; outline-offset: 5px; }
+@media (min-width: 901px) and (prefers-reduced-motion: no-preference) {
+  #v-curriculum .journey-scrubbed .journey-layout { display: grid; grid-template-columns: minmax(0,.88fr) minmax(0,1.12fr); column-gap: clamp(36px, 5vw, 80px); align-items: start; }
+  #v-curriculum .journey-scrubbed .journey-reading { min-width: 0; }
+  #v-curriculum .journey-scrubbed .study-scene { display: flex; min-height: var(--journey-scene-height); padding-block: 64px; }
+  #v-curriculum .journey-scrubbed .study-scene > .scene-media { display: none; }
+  #v-curriculum .journey-scrubbed .journey-visuals { display: block; position: sticky; top: var(--journey-stage-top); height: var(--journey-canvas-height); min-width: 0; overflow: clip; pointer-events: none; }
+  #v-curriculum .journey-graphic { position: absolute; inset: 0; margin: 0; opacity: 0; visibility: hidden; }
+  #v-curriculum .journey-plane { position: absolute; left: 50%; top: 50%; transform: translate(-50%, -50%); }
+  #v-curriculum .journey-whole, #v-curriculum .journey-layer { position: absolute; inset: 0; display: block; width: 100%; height: 100%; padding: 0; border: 0; object-fit: fill; mask-mode: luminance; mask-size: 100% 100%; mask-repeat: no-repeat; mask-position: center; -webkit-mask-size: 100% 100%; -webkit-mask-repeat: no-repeat; -webkit-mask-position: center; }
+  #v-curriculum .journey-whole { z-index: 1000; }
+}
+@media (max-width: 900px) {
+  #v-curriculum .study-journey { padding-block: 64px 36px; }
+  #v-curriculum .journey-heading { align-items: start; flex-direction: column; padding-bottom: 20px; gap: 20px; }
+  #v-curriculum .study-scene { grid-template-columns: 1fr; min-height: 0; gap: 30px; padding-block: 48px 64px; border-bottom: 1px solid #dce5ee; scroll-margin-top: 108px; }
+  #v-curriculum .study-scene:last-child { border-bottom: 0; }
+  #v-curriculum .study-field-number { font-size: 76px; margin-bottom: 22px; }
+  #v-curriculum .study-description { max-width: 38em; }
+  #v-curriculum .scene-media { height: auto; aspect-ratio: 1.08; max-height: 640px; }
+  #v-curriculum .journey-inline-motion .scene-media { overflow: clip; }
+}
+@media (max-width: 480px) {
+  #v-curriculum .journey-heading h2 { font-size: 29px; }
+  #v-curriculum .study-scene h3 { font-size: 31px; }
+  #v-curriculum .study-one-line { font-size: 16px; }
+  #v-curriculum .study-description { font-size: 14px; }
+  #v-curriculum .study-keywords { font-size: 10px; }
+}
+@media (prefers-reduced-motion: reduce) {
+  #v-curriculum .journey-visuals { display: none; }
+}
