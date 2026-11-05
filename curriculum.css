@@ -119,14 +119,51 @@
 #v-curriculum .calendar-hint { margin: 18px 6px 0; color: #6b7f94; font-size: 12px; line-height: 1.7; }
 #v-curriculum .calendar-holiday-source { margin: 6px 0 0; }
 #v-curriculum .calendar-holiday-source a { color: #476e91; text-underline-offset: 3px; }
+#v-curriculum .calendar-sync-status { position: absolute; width: 1px; height: 1px; padding: 0; margin: -1px; overflow: hidden; clip-path: inset(50%); white-space: nowrap; }
+@media (min-width: 761px) {
+  #v-curriculum .curriculum-calendar { padding-block: 44px 24px; }
+  #v-curriculum .calendar-section-head { margin-bottom: 16px; }
+  #v-curriculum .calendar-section-head .curriculum-kicker { margin-bottom: 8px; }
+  #v-curriculum .calendar-section-head h2 { font-size: 26px; }
+  #v-curriculum .calendar-layout { padding: 12px; gap: 12px; grid-template-columns: minmax(0,1fr) 240px; }
+  #v-curriculum .calendar-month { padding: 16px 14px 12px; }
+  #v-curriculum .calendar-toolbar { margin-bottom: 10px; gap: 10px; }
+  #v-curriculum .calendar-toolbar h3 { font-size: 23px; }
+  #v-curriculum .calendar-legend { margin-bottom: 10px; font-size: 11px; }
+  #v-curriculum .calendar-legend span { padding: 3px 8px; }
+  #v-curriculum .calendar-weekdays { padding-bottom: 8px; font-size: 12px; }
+  #v-curriculum .calendar-week { min-height: 72px; padding: 2px 0 6px; }
+  #v-curriculum .calendar-week-dates { margin-bottom: 2px; }
+  #v-curriculum .calendar-grid .calendar-day { width: 32px; height: 32px; min-height: 32px; border-radius: 8px; font-size: 13px; }
+  #v-curriculum .calendar-week-events { row-gap: 3px; }
+  #v-curriculum .calendar-event-bar { min-height: 22px; padding: 2px 6px; font-size: 12px; line-height: 18px; }
+  #v-curriculum .calendar-hint { margin-top: 10px; font-size: 11px; }
+  #v-curriculum .calendar-agenda { padding: 18px 16px; }
+  #v-curriculum .calendar-agenda h3 { font-size: 18px; margin-bottom: 14px; padding-bottom: 12px; }
+  #v-curriculum .calendar-agenda .curriculum-kicker { margin-bottom: 10px; }
+  #v-curriculum .calendar-event-list h4 { font-size: 14px; line-height: 1.6; }
+  #v-curriculum .calendar-event-list li + li { margin-top: 14px; padding-top: 14px; }
+}
 @media (max-width: 1050px) { #v-curriculum .calendar-layout { grid-template-columns: minmax(0,1fr); } }
 @media (max-width: 760px) {
   #v-curriculum .curriculum-calendar { margin-inline: -16px; }
   #v-curriculum .calendar-layout { padding: 0; gap: 0; }
-  #v-curriculum .calendar-month { padding: 20px 6px 16px; }
+  #v-curriculum .calendar-month { padding: 16px 6px 12px; }
   #v-curriculum .calendar-toolbar h3 { font-size: 22px; }
-  #v-curriculum .calendar-legend { margin-bottom: 16px; font-size: 11px; gap: 6px; }
+  #v-curriculum .calendar-legend { margin-bottom: 10px; font-size: 11px; gap: 6px; }
   #v-curriculum .calendar-grid .calendar-day { font-size: 13px; }
   #v-curriculum .calendar-event-bar { min-height: 44px; padding: 12px 4px; font-size: 11px; line-height: 20px; margin-inline: 1px; }
-  #v-curriculum .calendar-week { min-height: 104px; }
+  #v-curriculum .calendar-week { min-height: 62px; padding-bottom: 4px; }
+  #v-curriculum .calendar-toolbar { margin-bottom: 12px; }
+  #v-curriculum .calendar-hint { margin-top: 10px; font-size: 11px; }
+  #v-curriculum .calendar-section-head { margin-bottom: 16px; }
+  #v-curriculum .calendar-section-head .curriculum-kicker { margin-bottom: 8px; }
+  #v-curriculum .calendar-section-head h2 { font-size: 24px; }
+  #v-curriculum .calendar-agenda { padding: 12px 14px; margin: 0 10px 10px; }
+  #v-curriculum .calendar-agenda .curriculum-kicker { display: none; }
+  #v-curriculum .calendar-agenda h3 { font-size: 15px; line-height: 1.5; margin-bottom: 8px; padding-bottom: 8px; }
+  #v-curriculum .calendar-event-kind { margin: 0 8px 0 0; font-size: 10px; padding: 3px 6px; }
+  #v-curriculum .calendar-event-list h4 { display: inline; font-size: 14px; line-height: 1.6; }
+  #v-curriculum .calendar-event-list li + li { margin-top: 10px; padding-top: 10px; }
+  #v-curriculum .event-study { padding-inline: 2px; font-size: 10px; }
 }

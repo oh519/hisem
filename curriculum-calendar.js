@@ -84,12 +84,11 @@
   var holidays = Array.isArray(window.HISEM_KR_HOLIDAYS) ? window.HISEM_KR_HOLIDAYS : [];
   events = calendarEvents(manualEvents, [], holidays);
   var calendar = body.closest('.curriculum-calendar');
-  var academicInfo = document.createElement('div'); academicInfo.className = 'calendar-academic-info';
+  var academicInfo = document.createElement('div'); academicInfo.className = 'calendar-sync-status';
   var sourceNote = document.createElement('p'); sourceNote.className = 'calendar-source-note'; sourceNote.setAttribute('aria-live', 'polite');
   var monthNoticeList = document.createElement('div'); monthNoticeList.className = 'calendar-month-notices';
-  academicInfo.append(sourceNote, monthNoticeList); calendar.appendChild(academicInfo);
-  var holidaySource = document.createElement('p'); holidaySource.className = 'calendar-holiday-source';
-  var holidayLink = document.createElement('a'); holidayLink.href = 'https://astro.kasi.re.kr/kor/life/post/calendarData?year=2027'; holidayLink.target = '_blank'; holidayLink.rel = 'noopener noreferrer'; holidayLink.textContent = '대한민국 공휴일 · 2026–2027년 확인 자료'; holidaySource.appendChild(holidayLink); academicInfo.appendChild(holidaySource);
+  // Keep loading/error feedback available to screen readers without the removed footer.
+  academicInfo.append(sourceNote); calendar.appendChild(academicInfo);
   sourceNote.textContent = '홍익대 학사일정 불러오는 중';
   function today() {
     var parts = new Intl.DateTimeFormat('en-CA', { timeZone: 'Asia/Seoul', year: 'numeric', month: '2-digit', day: '2-digit' }).formatToParts(new Date());
