@@ -5,9 +5,7 @@
 #v-curriculum .curriculum-summary-head { display: grid; grid-template-columns: 1fr 1fr; align-items: end; gap: 40px; }
 #v-curriculum .curriculum-summary h2 { margin: 0; font-size: clamp(32px, 3.4vw, 46px); color: var(--navy); font-weight: 300; line-height: 1.5; letter-spacing: -.045em; word-break: keep-all; }
 #v-curriculum .curriculum-lead { margin: 0 0 10px; color: #63748a; font-size: 17px; line-height: 1.9; word-break: keep-all; }
-#v-curriculum .curriculum-fields { display: flex; flex-wrap: wrap; list-style: none; gap: 12px; padding: 0; margin: 36px 0 40px; }
-#v-curriculum .curriculum-fields li { padding: 10px 18px; border: 1px solid #dce6f0; color: #365c80; font-size: 14px; background: #f7fafd; }
-#v-curriculum .curriculum-current { display: grid; grid-template-columns: 1fr 1.1fr; gap: 44px; padding: 32px 0; border-block: 1px solid var(--line); }
+#v-curriculum .curriculum-current { display: grid; grid-template-columns: 1fr 1.1fr; gap: 44px; margin-top: 40px; padding: 32px 0; border-block: 1px solid var(--line); }
 #v-curriculum .curriculum-current h3 { margin: 0 0 12px; color: var(--navy); font-weight: 400; font-size: 23px; }
 #v-curriculum .curriculum-current p:not(.curriculum-kicker) { margin: 0; color: #63748a; font-size: 14px; word-break: keep-all; }
 #v-curriculum .curriculum-method { list-style: none; margin: 0; padding: 0; display: grid; grid-template-columns: repeat(3, 1fr); gap: 20px; align-items: center; }
@@ -52,15 +50,32 @@
 #v-curriculum .calendar-month-notices:not(:empty) { margin-top: 14px; padding: 16px 18px; background: #f3f7fc; border: 1px solid #e5edf5; border-radius: 12px; }
 #v-curriculum .calendar-notices-label { margin: 0 0 6px; color: #526c86; }
 #v-curriculum .calendar-month-notices ul { margin: 0; padding-left: 18px; }
-#v-curriculum .study-journey { margin-top: 48px; scroll-margin-top: 68px; }
+#v-curriculum .curriculum-topics { padding-block: 72px 32px; background: #fff; }
+#v-curriculum .curriculum-topics-head { margin-bottom: 36px; }
+#v-curriculum .curriculum-topics-head h2 { margin: 0; color: var(--navy); font: 300 clamp(30px, 3.2vw, 44px)/1.5 var(--body); letter-spacing: -.04em; }
+#v-curriculum .curriculum-topic-list { border-top: 1px solid var(--line); }
+#v-curriculum .curriculum-topic { display: grid; grid-template-columns: 40px minmax(200px, .9fr) minmax(0, 1.35fr); align-items: start; gap: 28px; padding: 32px 0; border-bottom: 1px solid var(--line); }
+#v-curriculum .curriculum-topic-number { padding-top: 6px; color: #6683a0; font: 300 13px/1.7 var(--mono); }
+#v-curriculum .curriculum-topic-name h3 { margin: 0; color: var(--navy); font: 400 clamp(22px, 2.2vw, 28px)/1.4 var(--body); letter-spacing: -.025em; }
+#v-curriculum .curriculum-topic-name p { margin: 8px 0 0; color: #6683a0; font-size: 14px; }
+#v-curriculum .curriculum-topic-description > p { margin: 0; color: #5f7289; font-size: 18px; line-height: 1.85; word-break: keep-all; }
+#v-curriculum .curriculum-topic-description .curriculum-topic-tags { margin-top: 14px; color: #476b8d; font-size: 13px; line-height: 1.8; word-break: normal; }
 #v-curriculum .curriculum-archive-cta { display: flex; justify-content: center; padding-block: 24px 52px; border-top: 1px solid #dce5ee; }
 #v-curriculum .curriculum-archive-cta .btn { gap: 28px; }
 @media (max-width: 760px) {
   #v-curriculum .curriculum-top { padding-top: 44px; }
   #v-curriculum .curriculum-summary-head, #v-curriculum .curriculum-current { grid-template-columns: 1fr; gap: 24px; }
   #v-curriculum .curriculum-lead { font-size: 15px; }
-  #v-curriculum .curriculum-fields { gap: 8px; margin-block: 24px 28px; }
-  #v-curriculum .curriculum-fields li { font-size: 12px; padding: 8px 12px; }
+  #v-curriculum .curriculum-current { margin-top: 28px; }
+  #v-curriculum .curriculum-topics { padding-block: 48px 16px; }
+  #v-curriculum .curriculum-topics-head { margin-bottom: 28px; }
+  #v-curriculum .curriculum-topic { grid-template-columns: 28px minmax(0, 1fr); gap: 14px; padding-block: 26px; }
+  #v-curriculum .curriculum-topic-number { padding-top: 4px; }
+  #v-curriculum .curriculum-topic-name h3 { font-size: 24px; }
+  #v-curriculum .curriculum-topic-name p { font-size: 13px; }
+  #v-curriculum .curriculum-topic-description { grid-column: 2; }
+  #v-curriculum .curriculum-topic-description > p { font-size: 16px; }
+  #v-curriculum .curriculum-topic-description .curriculum-topic-tags { font-size: 12px; }
   #v-curriculum .curriculum-method { gap: 12px; }
   #v-curriculum .curriculum-method li { padding-left: 12px; }
   #v-curriculum .curriculum-method b { font-size: 13px; }

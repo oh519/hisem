@@ -2,13 +2,22 @@
 
 브랜치: `feature/archive-study-materials`
 
-2026-11-05 사용자의 요청으로 현재 로컬 작업을 별도 브랜치에 업로드한다. 다른 작업자 변경의 병합, main 반영, 공개 배포는 포함하지 않는다.
+이 브랜치는 검토용 변경을 공유한다. 다른 작업자 브랜치와 main을 자동 병합하지 않으며 공개 사이트의 배포 기준도 바꾸지 않는다.
 
-- 기준 커밋: `ea46f1ac978d6bb07e28181c4c7d5a2bd95f056d`. 업로드 직전 확인한 원격 main은 `4d304b28471820f9525aae42ee9198bce230472e`이며 해당 변경을 합치지 않았다.
-- 포함: PDF·발표자료 아카이브와 예시 파일, 메인 디테일, 커리큘럼 요약·캘린더·스크롤 그림·등장/퇴장 모션, 이미지 원본·이전 시안·운영 문서·검사 코드.
-- 기존 다른 작업 폴더의 메인 개편·Introduction 작업은 이 브랜치에 자동으로 합치지 않았다.
-- 검증: `node --test tests/archive.test.cjs tests/curriculum-calendar.test.cjs tests/study-scenes.test.cjs tests/study-illustrations.test.cjs` 24개 통과. `node scripts/check-archive.cjs` 통과.
-- 미리보기: 이 폴더에서 `python -m http.server 5174 --bind 127.0.0.1` 실행 후 `http://127.0.0.1:5174/#curriculum` 접속.
-- 최신 모션 작업 기록: `MOTION_EXIT_WORKLOG.md`. 자료 등록: `ARCHIVE_GUIDE.md`. 확정 일정은 `curriculum-data.js`에서 관리하며 현재 실제 등록 일정은 없다.
+## 현재 포함한 기능
 
-이 브랜치를 main에 합칠지는 추후 별도 검토한다.
+- 메인: 기존 웨이퍼 첫 화면과 네 분야의 흰색 요약 카드.
+- Introduction: 팀별 공정 학습·공유 발표·자료 아카이브 활동 소개.
+- Curriculum: 학습 방식, 네 분야 상세 목록, 활동·학사·공휴일 캘린더. 과거 스크롤 그래픽 시안과 이미지 원본은 현재 트리에서 제거했고 Git 이력에는 남아 있다.
+- Archive: 주제별 PDF·발표 자료 목록, PDF 미리보기, PPT/PPTX 다운로드와 별도 PDF 미리보기. 요청받은 예시 파일 두 개는 실제 활동 자료와 구분해 유지한다.
+- 공식 학사일정 JSON 자동 갱신과 통신 실패 시 저장된 사본 표시. 사용자 지정 2026-11-06 Kickoff, 확인된 2026–2027 공휴일 데이터.
+
+자료 등록은 `ARCHIVE_GUIDE.md`, 화면·일정 관리는 `CURRICULUM_GUIDE.md`, 자동 갱신은 `ACADEMIC_CALENDAR_GUIDE.md`를 참고한다.
+
+## 확인과 공유
+
+이 폴더에서 `python -m http.server 5174 --bind 127.0.0.1` 실행 후 `http://127.0.0.1:5174/#home`으로 접속한다. 종료하면 로컬 주소는 접속할 수 없다.
+
+원격 검토 링크는 `https://raw.githack.com/oh519/hisem/<커밋 전체 해시>/index.html#home` 형식이다. 커밋을 고정한 링크는 이후 변경을 자동 반영하지 않으므로 업로드할 때 새 링크를 공유한다. 이 링크 제공은 main 병합이나 GitHub Pages 배포와 별개다.
+
+main에는 과거 사용자가 별도로 승인한 일정 자동 갱신 워크플로 하나만 추가한 이력이 있다. 이번 화면 변경은 main에 넣지 않는다. 다른 로컬 작업 폴더와 기존 브랜치도 보존한다.

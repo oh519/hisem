@@ -83,7 +83,7 @@ PDF.js 6.5.438을 `vendor/pdfjs/`에 포함했다. 자료 상세에서 PDF를 �
 
 기준 배포 커밋: `ea46f1ac978d6bb07e28181c4c7d5a2bd95f056d`.
 
-작업 폴더 `hisem-archive`, 브랜치 `feature/archive-study-materials`의 로컬 미커밋 변경이다. 이전 메인페이지·Introduction 작업은 합치지 않았다. GitHub 업로드·Pull Request·병합·배포는 하지 않았다.
+작업 폴더는 `hisem-archive`, 검토용 공유 브랜치는 `feature/archive-study-materials`다. 사용자의 요청으로 이 브랜치에 업로드하며, 다른 작업 폴더의 메인페이지·Introduction 변경을 자동 병합하지 않는다. main 병합과 공개 배포는 별도 요청으로 진행한다. 현재 공유 방법은 `BRANCH_HANDOFF.md`를 참고한다.
 
 로컬 수정 → commit으로 변경 기록 저장 → 자신의 브랜치 push → 비교 검토 → main 병합 여부 결정 순서다. 별도 브랜치 push만으로 main에 합쳐지지 않는다. 현재 확인한 Pages는 main을 배포한다. 연결 계정의 원본 저장소 쓰기 권한 또는 개인 fork도 추후 확인해야 한다.
 
