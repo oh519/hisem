@@ -23,15 +23,11 @@
 
 학교가 다음 학년도 자료를 아직 게시하지 않았을 때 다음 연도 조회가 현재 연도로 되돌아오는 것을 확인했다. 따라서 미래 학년도를 임의로 조회하거나 올해 일정을 다음 해 일정으로 바꾸지 않는다. 연도가 바뀌어 응답 날짜 검증이 실패하면 기존 스냅샷이 남고 작업 로그에 오류가 기록된다.
 
-## GitHub 자동 실행 등록과 확인 결과
+## GitHub 자동 갱신
 
-`.github/workflows/academic-calendar.yml`은 매일 한국 시간 07:37과 수동 실행을 정의한다. 체크아웃과 푸시 대상을 `feature/archive-study-materials`로 고정했다. 기본 브랜치에서 스케줄을 실행하더라도 이 검토 브랜치의 `data/academic-calendar.json`만 커밋하며 main의 UI·데이터를 변경하거나 병합·Pages 배포를 실행하지 않는다.
+`.github/workflows/academic-calendar.yml`은 한국 시간 매월 1일 오전 7시 37분에 실행된다. 필요하면 GitHub Actions에서 `main`을 선택해 수동으로 실행할 수도 있다.
 
-2026-11-05 사용자 승인에 따라 [main 커밋 `4e484d8`](https://github.com/oh519/hisem/commit/4e484d81ae175c7a791f3f690c43a35602072569)에 워크플로 파일 하나만 등록했다. GitHub 예약 실행에 필요한 기본 브랜치 등록을 완료했으며, 화면 코드·갱신 스크립트·검사·JSON은 검토 브랜치에 유지했다. main에 UI를 병합하지 않았다.
-
-검토 브랜치의 갱신 코드·검사·워크플로를 푸시해 실행된 [작업 `42010672245`](https://github.com/oh519/hisem/actions/runs/42010672245)가 성공한 것을 확인했다. 이 실행은 `push`로 시작됐으며, [봇 커밋 `43b2d4f`](https://github.com/oh519/hisem/commit/43b2d4fe1b4fdaa874af00cf4c3f7a05a6c3f8b5)는 검토 브랜치의 `data/academic-calendar.json` 확인 시각만 갱신했다. 데이터만 커밋한 봇 푸시는 다시 실행하지 않는다.
-
-공개 GitHub API로 워크플로 `407985553`의 `state: active`도 확인했다. 이 확인 시점에는 매일 예약 시각에 시작된 실행까지 관찰하지 않았다. 성공한 첫 실행을 예약 실행의 성공으로 표현하지 않는다. 원격 CDN 미리보기는 캐시로 반영이 지연될 수 있다.
+공식 일정 조회가 성공하면 `main`의 `data/academic-calendar.json`을 갱신하고 GitHub Pages 빌드를 요청한다. 조회에 실패하면 저장된 일정 데이터를 유지하며, 실패 내용은 실행 기록에서 확인할 수 있다.
 
 GitHub 기준: https://docs.github.com/en/actions/reference/workflows-and-actions/events-that-trigger-workflows#schedule
 
