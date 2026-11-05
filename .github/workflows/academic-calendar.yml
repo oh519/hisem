@@ -1,0 +1,44 @@
+name: Update official academic calendar
+
+on:
+  push:
+    branches: [feature/archive-study-materials]
+    paths:
+      - '.github/workflows/academic-calendar.yml'
+      - 'scripts/fetch_academic_calendar.py'
+      - 'tests/test_academic_calendar.py'
+  schedule:
+    - cron: '37 22 * * *' # 07:37 KST; scheduled workflows run from the default branch only.
+  workflow_dispatch:
+
+permissions:
+  contents: write
+
+concurrency:
+  group: academic-calendar-feature-archive-study-materials
+  cancel-in-progress: false
+
+jobs:
+  sync:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          ref: feature/archive-study-materials
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.12'
+      - name: Verify parser
+        run: python -m unittest discover -s tests -p 'test_academic_calendar.py'
+      - name: Fetch official public schedule
+        run: python scripts/fetch_academic_calendar.py
+      - name: Save snapshot on the review branch only
+        run: |
+          if git diff --quiet -- data/academic-calendar.json; then
+            exit 0
+          fi
+          git config user.name 'github-actions[bot]'
+          git config user.email '41898282+github-actions[bot]@users.noreply.github.com'
+          git add -- data/academic-calendar.json
+          git commit -m 'Update official academic calendar snapshot'
+          git push origin HEAD:refs/heads/feature/archive-study-materials
