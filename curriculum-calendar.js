@@ -33,6 +33,33 @@
       return event.type === 'academic' && typeof event.title === 'string' && event.title.trim() && validDate(event.date) && validDate(event.endDate) && event.endDate >= event.date;
     }).map(function (event) { return { date: event.date, endDate: event.endDate, title: event.title, type: 'academic', sourceUrl: 'https://www.hongik.ac.kr/kr/education/academic-schedule001.do' }; });
   }
+  function shortTitle(title) {
+    return title.replace(/^\d{4}(?:학년도|년)\s*/, '').replace(/^[12]학기\s*/, '').replace(/^공휴일로 인한 수업보강기간$/, '수업 보강');
+  }
+  function calendarEvents(manual, academic, holidays) {
+    return holidays.concat(manual, academic.filter(function (event) {
+      var name = shortTitle(event.title).replace(/\s|\(공휴일\)/g, '').replace(/기독탄신일|크리스마스/g, '성탄절');
+      return !holidays.some(function (holiday) { return event.date === holiday.date && event.endDate === holiday.endDate && name === holiday.title.replace(/\s/g, ''); });
+    }));
+  }
+  function weekSegments(events, cells) {
+    var valid = events.filter(function (event) { return validDate(event.date) && validDate(event.endDate || event.date) && event.date <= (event.endDate || event.date) && typeof event.title === 'string' && event.title.trim(); });
+    var preferred = new Map();
+    return Array.from({ length: 6 }, function (_, week) {
+      var days = cells.slice(week * 7, week * 7 + 7), first = days[0].date, last = days[6].date, occupied = [];
+      var segments = valid.filter(function (event) { return event.date <= last && (event.endDate || event.date) >= first; }).map(function (event) {
+        var start = event.date < first ? first : event.date, end = (event.endDate || event.date) > last ? last : (event.endDate || event.date);
+        return { event: event, start: days.findIndex(function (day) { return day.date === start; }), end: days.findIndex(function (day) { return day.date === end; }), date: start, before: event.date < first, after: (event.endDate || event.date) > last };
+      }).sort(function (a, b) { return Number(b.before) - Number(a.before) || (b.end - b.start) - (a.end - a.start) || a.start - b.start || a.event.title.localeCompare(b.event.title, 'ko'); });
+      segments.forEach(function (segment) {
+        function free(lane) { return !occupied[lane] || !occupied[lane].some(function (other) { return segment.start <= other.end && segment.end >= other.start; }); }
+        var lane = preferred.get(segment.event);
+        if (lane == null || !free(lane)) { lane = 0; while (!free(lane)) lane++; }
+        (occupied[lane] || (occupied[lane] = [])).push(segment); preferred.set(segment.event, lane); segment.lane = lane;
+      });
+      return { days: days, segments: segments, lanes: occupied.length };
+    });
+  }
   function noticesInMonth(notices, month) {
     return notices.filter(function (notice) { return /^\d{4}-\d{2}$/.test(notice.startMonth) && /^\d{4}-\d{2}$/.test(notice.endMonth) && validDate(notice.startMonth + '-01') && validDate(notice.endMonth + '-01') && notice.startMonth <= month && month <= notice.endMonth && typeof notice.title === 'string' && notice.title.trim(); });
   }
@@ -48,17 +75,21 @@
       throw error;
     });
   }
-  if (typeof module === 'object' && module.exports) module.exports = { monthCells: monthCells, moveMonth: moveMonth, validDate: validDate, eventsOn: eventsOn, academicEvents: academicEvents, noticesInMonth: noticesInMonth, loadAcademicSnapshot: loadAcademicSnapshot };
+  if (typeof module === 'object' && module.exports) module.exports = { monthCells: monthCells, moveMonth: moveMonth, validDate: validDate, eventsOn: eventsOn, academicEvents: academicEvents, noticesInMonth: noticesInMonth, loadAcademicSnapshot: loadAcademicSnapshot, weekSegments: weekSegments, shortTitle: shortTitle, calendarEvents: calendarEvents };
   if (typeof document === 'undefined') return;
   var body = document.getElementById('calendar-days');
   if (!body) return;
   var events = Array.isArray(window.HISEM_CURRICULUM_EVENTS) ? window.HISEM_CURRICULUM_EVENTS : [];
   var manualEvents = events.slice(), monthNotices = [], academicState = 'loading';
+  var holidays = Array.isArray(window.HISEM_KR_HOLIDAYS) ? window.HISEM_KR_HOLIDAYS : [];
+  events = calendarEvents(manualEvents, [], holidays);
   var calendar = body.closest('.curriculum-calendar');
   var academicInfo = document.createElement('div'); academicInfo.className = 'calendar-academic-info';
   var sourceNote = document.createElement('p'); sourceNote.className = 'calendar-source-note'; sourceNote.setAttribute('aria-live', 'polite');
   var monthNoticeList = document.createElement('div'); monthNoticeList.className = 'calendar-month-notices';
   academicInfo.append(sourceNote, monthNoticeList); calendar.appendChild(academicInfo);
+  var holidaySource = document.createElement('p'); holidaySource.className = 'calendar-holiday-source';
+  var holidayLink = document.createElement('a'); holidayLink.href = 'https://astro.kasi.re.kr/kor/life/post/calendarData?year=2027'; holidayLink.target = '_blank'; holidayLink.rel = 'noopener noreferrer'; holidayLink.textContent = '대한민국 공휴일 · 2026–2027년 확인 자료'; holidaySource.appendChild(holidayLink); academicInfo.appendChild(holidaySource);
   sourceNote.textContent = '홍익대 학사일정 불러오는 중';
   function today() {
     var parts = new Intl.DateTimeFormat('en-CA', { timeZone: 'Asia/Seoul', year: 'numeric', month: '2-digit', day: '2-digit' }).formatToParts(new Date());
@@ -80,7 +111,7 @@
     var list = document.createElement('ul'); list.className = 'calendar-event-list';
     items.forEach(function (event) {
       var item = document.createElement('li'), title = document.createElement('h4');
-      var kind = document.createElement('span'); kind.className = 'calendar-event-kind'; kind.textContent = event.type === 'academic' ? '학사일정' : '학회 일정'; item.appendChild(kind);
+      var kind = document.createElement('span'); kind.className = 'calendar-event-kind'; kind.textContent = event.type === 'holiday' ? '공휴일' : event.type === 'academic' ? '학사일정' : '학회 일정'; item.appendChild(kind);
       title.textContent = event.title; item.appendChild(title);
       if (event.endDate && event.endDate !== event.date) { var period = document.createElement('p'); period.className = 'calendar-event-period'; period.textContent = event.date + ' ~ ' + event.endDate; item.appendChild(period); }
       if (typeof event.description === 'string' && event.description.trim()) { var text = document.createElement('p'); text.textContent = event.description; item.appendChild(text); }
@@ -91,18 +122,33 @@
   function render(focusDate) {
     heading.textContent = year + '년 ' + (month + 1) + '월';
     body.replaceChildren();
-    var cells = monthCells(year, month), row;
-    cells.forEach(function (cell, index) {
-      if (index % 7 === 0) { row = document.createElement('tr'); body.appendChild(row); }
-      var td = document.createElement('td'), button = document.createElement('button');
+    var cells = monthCells(year, month);
+    weekSegments(events, cells).forEach(function (week) {
+      if (!week.days.some(function (day) { return day.inMonth; })) return;
+      var row = document.createElement('div'); row.className = 'calendar-week';
+      var dates = document.createElement('div'); dates.className = 'calendar-week-dates'; row.appendChild(dates);
+      week.days.forEach(function (cell, index) {
+      var button = document.createElement('button');
       var items = eventsOn(events, cell.date);
       button.type = 'button'; button.dataset.date = cell.date; button.textContent = String(cell.day);
-      button.className = 'calendar-day' + (cell.inMonth ? '' : ' is-outside') + (items.length ? ' has-event' : '') + (items.some(function (event) { return event.type === 'academic'; }) ? ' has-academic' : '');
-      button.setAttribute('aria-label', dayFormat.format(parse(cell.date)) + (items.length ? ', 일정 ' + items.length + '개' : ''));
+      button.className = 'calendar-day' + (cell.inMonth ? '' : ' is-outside') + (index === 0 ? ' is-sunday' : index === 6 ? ' is-saturday' : '') + (items.some(function (event) { return event.type === 'holiday'; }) ? ' is-holiday' : '');
+      button.setAttribute('aria-label', dayFormat.format(parse(cell.date)) + (items.length ? ', ' + items.map(function (event) { return event.title; }).join(', ') : ''));
       button.setAttribute('aria-pressed', String(cell.date === selected));
       button.tabIndex = cell.date === selected ? 0 : -1;
       if (cell.date === today()) button.setAttribute('aria-current', 'date');
-      td.appendChild(button); row.appendChild(td);
+      dates.appendChild(button);
+      });
+      var bars = document.createElement('div'); bars.className = 'calendar-week-events';
+      week.segments.forEach(function (segment) {
+        var event = segment.event, button = document.createElement('button'); button.type = 'button'; button.dataset.date = segment.date;
+        button.className = 'calendar-event-bar event-' + (event.type === 'holiday' ? 'holiday' : event.type === 'academic' ? 'academic' : 'study') + (segment.before ? ' continues-before' : '') + (segment.after ? ' continues-after' : '');
+        button.style.gridColumn = (segment.start + 1) + ' / span ' + (segment.end - segment.start + 1); button.style.gridRow = String(segment.lane + 1);
+        button.textContent = (segment.before ? '↳ ' : '') + shortTitle(event.title);
+        button.title = event.title + ' · ' + event.date + ' ~ ' + (event.endDate || event.date);
+        button.setAttribute('aria-label', (event.type === 'holiday' ? '공휴일 ' : '') + button.title);
+        bars.appendChild(button);
+      });
+      row.appendChild(bars); body.appendChild(row);
     });
     showAgenda();
     monthNoticeList.replaceChildren();
@@ -140,7 +186,7 @@
     var academic = academicEvents(data);
     if (!academic.length) return;
     academicState = saved ? 'saved' : 'ready';
-    events = manualEvents.concat(academic); monthNotices = Array.isArray(data.notices) ? data.notices : [];
+    events = calendarEvents(manualEvents, academic, holidays); monthNotices = Array.isArray(data.notices) ? data.notices : [];
     sourceNote.replaceChildren();
     var sourceLink = document.createElement('a'); sourceLink.href = 'https://www.hongik.ac.kr/kr/education/academic-schedule001.do'; sourceLink.target = '_blank'; sourceLink.rel = 'noopener noreferrer'; sourceLink.textContent = '홍익대 공식 학사일정'; sourceNote.appendChild(sourceLink);
     var fetched = new Date(data.fetchedAt);

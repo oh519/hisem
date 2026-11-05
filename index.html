@@ -349,7 +349,7 @@ footer { border-top: 1px solid var(--line); padding-block: 56px 32px; }
 <link rel="stylesheet" href="archive.css?v=rounded-20261106-1">
 <link rel="stylesheet" href="home-refinement.css?v=review-20261105-1">
 <link rel="stylesheet" href="study-scenes.css?v=pinned-sequence-20261105-1">
-<link rel="stylesheet" href="curriculum.css?v=rounded-20261106-2">
+<link rel="stylesheet" href="curriculum.css?v=event-bars-20261106-1">
 <script src="archive-data.js" defer></script>
 <script src="archive-preview.js" defer></script>
 <script src="archive.js" defer></script>
@@ -358,7 +358,8 @@ footer { border-top: 1px solid var(--line); padding-block: 56px 32px; }
 <script src="study-scenes.js?v=measured-20261106-1" defer></script>
 <script src="curriculum-data.js" defer></script>
 <script src="data/academic-calendar-fallback.js?v=20261106-1" defer></script>
-<script src="curriculum-calendar.js?v=resilient-20261106-1" defer></script>
+<script src="data/kr-holidays.js?v=20261106-1" defer></script>
+<script src="curriculum-calendar.js?v=event-bars-20261106-2" defer></script>
 
 <header class="site-header">
   <div class="wrap nav">
@@ -497,7 +498,10 @@ footer { border-top: 1px solid var(--line); padding-block: 56px 32px; }
         <div class="calendar-layout">
           <div class="calendar-month">
             <div class="calendar-toolbar"><h3 id="calendar-month-title" aria-live="polite"></h3><div class="calendar-controls"><button type="button" id="calendar-prev" aria-label="이전 달">←</button><button type="button" id="calendar-today">오늘</button><button type="button" id="calendar-next" aria-label="다음 달">→</button></div></div>
-            <table class="calendar-table" aria-labelledby="calendar-month-title"><thead><tr><th scope="col">일</th><th scope="col">월</th><th scope="col">화</th><th scope="col">수</th><th scope="col">목</th><th scope="col">금</th><th scope="col">토</th></tr></thead><tbody id="calendar-days"></tbody></table>
+            <div class="calendar-legend" aria-label="일정 구분"><span class="legend-academic">학사일정</span><span class="legend-study">학회 일정</span><span class="legend-holiday">공휴일</span></div>
+            <div class="calendar-weekdays" aria-hidden="true"><span>일</span><span>월</span><span>화</span><span>수</span><span>목</span><span>금</span><span>토</span></div>
+            <div id="calendar-days" class="calendar-grid" role="group" aria-labelledby="calendar-month-title"></div>
+            <p class="calendar-hint">일정 막대를 누르면 전체 이름과 기간을 볼 수 있습니다.</p>
           </div>
           <aside class="calendar-agenda" aria-labelledby="calendar-selected-title"><p class="curriculum-kicker">SELECTED DAY</p><h3 id="calendar-selected-title" aria-live="polite"></h3><div id="calendar-events" aria-live="polite"></div></aside>
         </div>
