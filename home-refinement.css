@@ -1,4 +1,5 @@
-/* Home only. Sub-pages and shared navigation keep their existing layouts. */
+/* Home refinements and a scoped Introduction concept paragraph. Shared navigation is unchanged. */
+.view[data-view="introduction"] .intro-concept { max-width: 48em; margin: -8px 0 38px; color: #63748a; font-size: 18px; line-height: 1.9; word-break: keep-all; }
 #v-home { --home-dark: #101c30; --home-silver: #f0f3f7; }
 #v-home > .hero { background: radial-gradient(ellipse 48% 68% at 77% 44%, #dce5ef 0%, transparent 75%), linear-gradient(125deg, #fbfcfd 16%, #eef1f5 100%); border-bottom: 0; }
 #v-home .hero::before { background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='160' height='160'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='.8' numOctaves='3' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)' opacity='.6'/%3E%3C/svg%3E"); background-size: 160px 160px; mask-image: none; -webkit-mask-image: none; opacity: .065; }
@@ -48,8 +49,8 @@
 #v-home .track > svg { display: none; }
 #v-home .t-no { position: static; grid-column: 1; grid-row: 1 / 3; font-size: 13px; color: #8194ac; }
 #v-home .track h3 { grid-column: 2; grid-row: 1 / 3; font: 300 clamp(22px,2.2vw,30px)/1.35 var(--body); letter-spacing: -.025em; color: #f1f5fb; }
-#v-home .track p { grid-column: 3; grid-row: 1; font-size: 15px; line-height: 1.8; color: #b2bdcd; word-break: keep-all; }
-#v-home .t-tags { grid-column: 3; grid-row: 2; padding: 0; color: #7f94b0; font-size: 11px; letter-spacing: .01em; }
+#v-home .track p { grid-column: 3; grid-row: 1; font-size: 17px; line-height: 1.8; color: #b2bdcd; word-break: keep-all; }
+#v-home .t-tags { grid-column: 3; grid-row: 2; padding: 0; color: #7f94b0; font-size: 13px; letter-spacing: .01em; }
 #v-home .track::after { content: '↗'; grid-column: 4; grid-row: 1 / 3; color: #8fb5d5; font-size: 24px; }
 #v-home #news-sec { padding-top: 100px; }
 #v-home .news { gap: 30px; }
@@ -72,6 +73,7 @@
   #v-home .track { column-gap: 18px; grid-template-columns: 32px minmax(180px,1fr) minmax(0,1.3fr) 20px; }
 }
 @media (max-width: 760px) {
+  .view[data-view="introduction"] .intro-concept { margin-top: 0; font-size: 16px; line-height: 1.85; }
   #v-home .hero-grid { grid-template-columns: 1fr; min-height: 0; padding-top: 50px; padding-bottom: 0; }
   #v-home .hero h1 { font-size: clamp(50px, 11vw, 80px); }
   #v-home .eyebrow { margin-bottom: 24px; font-size: 10px; }
@@ -91,8 +93,8 @@
   #v-home .track { grid-template-columns: 28px minmax(0,1fr) 20px; padding-block: 28px; gap: 14px; }
   #v-home .t-no { grid-column: 1; grid-row: 1; }
   #v-home .track h3 { grid-column: 2; grid-row: 1; font-size: 24px; }
-  #v-home .track p { grid-column: 2 / 4; grid-row: 2; font-size: 14px; }
-  #v-home .t-tags { grid-column: 2 / 4; grid-row: 3; font-size: 10px; }
+  #v-home .track p { grid-column: 2 / 4; grid-row: 2; font-size: 16px; }
+  #v-home .t-tags { grid-column: 2 / 4; grid-row: 3; font-size: 12px; }
   #v-home .track::after { grid-column: 3; grid-row: 1; font-size: 20px; }
   #v-home #news-sec { padding-top: 64px; }
   #v-home .home-sec.last { padding-block: 64px; }

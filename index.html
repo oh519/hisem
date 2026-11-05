@@ -347,17 +347,17 @@ footer { border-top: 1px solid var(--line); padding-block: 56px 32px; }
 @media (max-width: 520px) { .foot-nav { grid-template-columns: repeat(2, minmax(0, 1fr)); } }
 </style>
 <link rel="stylesheet" href="archive.css">
-<link rel="stylesheet" href="home-refinement.css">
-<link rel="stylesheet" href="study-scenes.css?v=curriculum-ux-20261105-1">
-<link rel="stylesheet" href="curriculum.css?v=curriculum-ux-20261105-1">
+<link rel="stylesheet" href="home-refinement.css?v=review-20261105-1">
+<link rel="stylesheet" href="study-scenes.css?v=pinned-sequence-20261105-1">
+<link rel="stylesheet" href="curriculum.css?v=review-20261105-1">
 <script src="archive-data.js" defer></script>
 <script src="archive-preview.js" defer></script>
 <script src="archive.js" defer></script>
 <script src="home-refinement.js" defer></script>
 <script src="study-layers.js?v=reverse-exit-20261105-1" defer></script>
-<script src="study-scenes.js?v=reverse-exit-20261105-1" defer></script>
+<script src="study-scenes.js?v=pinned-sequence-20261105-1" defer></script>
 <script src="curriculum-data.js" defer></script>
-<script src="curriculum-calendar.js?v=curriculum-ux-20261105-1" defer></script>
+<script src="curriculum-calendar.js?v=academic-calendar-20261105-1" defer></script>
 
 <header class="site-header">
   <div class="wrap nav">
@@ -459,6 +459,7 @@ footer { border-top: 1px solid var(--line); padding-block: 56px 32px; }
   <section class="view" data-view="introduction" hidden>
     <div class="page-body"><div class="wrap">
       <p class="lead">홍익대학교 신소재공학과 반도체 학술 동아리</p>
+      <p class="intro-concept">HISEM은 반도체 공정을 팀별로 공부하고, 서로의 발표를 통해 공정의 원리와 연결을 함께 이해하는 학술 소모임입니다. 학습 보고서와 발표 자료를 아카이브에 남겨 배움을 이어갑니다.</p>
       <dl class="facts">
         <div class="fact"><dt>Name</dt><dd>HISEM <span class="status">가칭</span></dd></div>
         <div class="fact"><dt>Founded</dt><dd>2026</dd></div>
@@ -508,6 +509,7 @@ footer { border-top: 1px solid var(--line); padding-block: 56px 32px; }
           <div><p class="journey-kicker">WHAT WE STUDY</p><h2 id="study-journey-title">그림으로 살펴보는<br>네 가지 학습 분야</h2></div>
         </header>
         <div class="journey-layout">
+          <div class="journey-stage">
           <div class="journey-reading">
             <div class="journey-scenes">
               <article class="study-scene" id="study-materials" data-study-scene="materials" data-tint="#f0f4f8" aria-labelledby="study-materials-title">
@@ -565,6 +567,7 @@ footer { border-top: 1px solid var(--line); padding-block: 56px 32px; }
             </div>
           </div>
           <div class="journey-visuals" aria-label="현재 학습 분야 테마 이미지"></div>
+          </div>
         </div>
         <div class="curriculum-archive-cta"><a class="btn primary" href="#activity">활동 기록 보기 <span aria-hidden="true">↗</span></a></div>
       </div>

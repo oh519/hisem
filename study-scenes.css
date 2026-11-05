@@ -1,4 +1,4 @@
-/* Four study fields. Text stays in document flow; art is scrubbed by scroll geometry. */
+/* Whole desktop stage pins until its sequential entrance/hold/exit cycles finish. */
 #v-curriculum .study-journey { --journey-tint: #f0f4f8; padding-block: 92px 40px; color: var(--navy); background: var(--journey-tint); background-image: linear-gradient(#fff, transparent 420px); }
 #v-curriculum .journey-heading { display: flex; align-items: end; justify-content: space-between; gap: 30px; padding-bottom: 54px; }
 #v-curriculum .journey-kicker { margin: 0 0 22px; color: #6e8399; font-size: 11px; letter-spacing: .13em; }
@@ -6,6 +6,7 @@
 #v-curriculum .journey-curriculum, #v-curriculum .study-detail-link { display: inline-flex; align-items: center; justify-content: space-between; gap: 28px; min-height: 44px; color: #284b6d; text-decoration: none; font-size: 14px; border-bottom: 1px solid #aebfd0; }
 #v-curriculum .journey-curriculum { flex: none; }
 #v-curriculum .journey-layout { position: relative; }
+#v-curriculum .journey-stage { position: relative; }
 #v-curriculum .journey-visuals { display: none; }
 #v-curriculum .study-scene { display: grid; grid-template-columns: 1fr 1.2fr; align-items: center; gap: 56px; min-height: 720px; padding-block: 50px; scroll-margin-top: 148px; }
 #v-curriculum .study-copy { min-width: 0; }
@@ -23,15 +24,24 @@
 #v-curriculum .scene-media.media-cutout .scene-primary { object-fit: contain; object-position: center; padding: clamp(8px, 2vw, 24px); border-radius: 0; filter: drop-shadow(0 20px 24px #18314a1c); }
 #v-curriculum .study-detail-link:focus-visible, #v-curriculum .journey-curriculum:focus-visible { outline: 2px solid #337da3; outline-offset: 5px; }
 @media (min-width: 901px) and (prefers-reduced-motion: no-preference) {
-  #v-curriculum .journey-scrubbed .journey-layout { display: grid; grid-template-columns: minmax(0,.88fr) minmax(0,1.12fr); column-gap: clamp(36px, 5vw, 80px); align-items: start; }
-  #v-curriculum .journey-scrubbed .journey-reading { min-width: 0; }
-  #v-curriculum .journey-scrubbed .study-scene { display: flex; min-height: var(--journey-scene-height); padding-block: 64px; }
+  #v-curriculum .journey-scrubbed .journey-layout { height: var(--journey-runway-height); }
+  #v-curriculum .journey-scrubbed .journey-stage { display: grid; grid-template-columns: minmax(0,.88fr) minmax(0,1.12fr); column-gap: clamp(36px, 5vw, 80px); align-items: center; position: sticky; top: var(--journey-stage-top); height: var(--journey-canvas-height); }
+  #v-curriculum .journey-scrubbed .journey-reading, #v-curriculum .journey-scrubbed .journey-scenes { position: relative; min-width: 0; height: 100%; }
+  #v-curriculum .journey-scrubbed .study-scene { position: absolute; inset: 0; display: flex; min-height: 0; padding: 0; opacity: 0; visibility: hidden; }
+  #v-curriculum .journey-scrubbed .study-keywords { margin-bottom: 0; }
   #v-curriculum .journey-scrubbed .study-scene > .scene-media { display: none; }
-  #v-curriculum .journey-scrubbed .journey-visuals { display: block; position: sticky; top: var(--journey-stage-top); height: var(--journey-canvas-height); min-width: 0; overflow: clip; pointer-events: none; }
+  #v-curriculum .journey-scrubbed .journey-visuals { display: block; position: relative; height: 100%; min-width: 0; overflow: clip; pointer-events: none; }
   #v-curriculum .journey-graphic { position: absolute; inset: 0; margin: 0; opacity: 0; visibility: hidden; }
   #v-curriculum .journey-plane { position: absolute; left: 50%; top: 50%; transform: translate(-50%, -50%); }
   #v-curriculum .journey-whole, #v-curriculum .journey-layer { position: absolute; inset: 0; display: block; width: 100%; height: 100%; padding: 0; border: 0; object-fit: fill; mask-mode: luminance; mask-size: 100% 100%; mask-repeat: no-repeat; mask-position: center; -webkit-mask-size: 100% 100%; -webkit-mask-repeat: no-repeat; -webkit-mask-position: center; }
   #v-curriculum .journey-whole { z-index: 1000; }
+}
+@media (min-width: 901px) and (max-height: 700px) {
+  #v-curriculum .journey-scrubbed .study-field-number { font-size: 60px; margin-bottom: 12px; }
+  #v-curriculum .journey-scrubbed .study-english { margin-bottom: 6px; }
+  #v-curriculum .journey-scrubbed .study-scene h3 { font-size: 30px; margin-bottom: 12px; }
+  #v-curriculum .journey-scrubbed .study-one-line { font-size: 16px; margin-bottom: 10px; }
+  #v-curriculum .journey-scrubbed .study-description { margin-bottom: 16px; line-height: 1.7; }
 }
 @media (max-width: 900px) {
   #v-curriculum .study-journey { padding-block: 64px 36px; }

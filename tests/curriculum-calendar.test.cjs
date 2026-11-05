@@ -23,3 +23,19 @@ test('only real, named events on the chosen date appear; empty data stays empty'
   const events = [{ date: '2026-11-05', title: '확정 활동' }, { date: '2026-11-06', title: '다른 날' }, { date: '2026-11-05', title: '' }];
   assert.deepEqual(calendar.eventsOn(events, '2026-11-05'), [events[0]]);
 });
+
+test('academic spans include both ends across months and retain the academic label', () => {
+  const data = { schemaVersion: 1, events: [{ date: '2026-12-15', endDate: '2027-01-04', title: '공식 성적 정정', type: 'academic' }] };
+  const events = calendar.academicEvents(data);
+  assert.equal(events[0].type, 'academic');
+  for (const date of ['2026-12-15', '2026-12-31', '2027-01-04']) assert.equal(calendar.eventsOn(events, date).length, 1);
+  for (const date of ['2026-12-14', '2027-01-05']) assert.equal(calendar.eventsOn(events, date).length, 0);
+  assert.deepEqual(calendar.academicEvents({ schemaVersion: 1, events: [{ date: '2026-02-30', endDate: '2026-03-01', title: 'Invalid', type: 'academic' }] }), []);
+});
+
+test('month-only notices are not treated as dated daily activities', () => {
+  const notice = { startMonth: '2026-11', endMonth: '2026-12', title: '장학금 신청 (기간 별도 공지)' };
+  assert.deepEqual(calendar.noticesInMonth([notice], '2026-11'), [notice]);
+  assert.deepEqual(calendar.noticesInMonth([notice], '2027-01'), []);
+  assert.deepEqual(calendar.eventsOn([notice], '2026-11-05'), []);
+});

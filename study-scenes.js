@@ -10,7 +10,7 @@
   var desktop = window.matchMedia('(min-width: 901px)');
   var reduced = window.matchMedia('(prefers-reduced-motion: reduce)');
   var definitions = window.HISEM_STUDY_LAYERS || {};
-  var scheduled = false, enabled = false, inline = false, stickyTop = 93, canvasHeight = 700;
+  var scheduled = false, enabled = false, inline = false, stickyTop = 93, canvasHeight = 700, cycleScroll = 270;
   var clamp = function (value) { return Math.max(0, Math.min(1, value)); };
   function ramp(start, end, value) {
     if (end <= start) return value >= end ? 1 : 0;
@@ -85,7 +85,9 @@
     canvasHeight = Math.max(180, Math.min(850, window.innerHeight - stickyTop - 28));
     layout.style.setProperty('--journey-stage-top', stickyTop + 'px');
     layout.style.setProperty('--journey-canvas-height', canvasHeight + 'px');
-    layout.style.setProperty('--journey-scene-height', Math.max(760, window.innerHeight - 28) + 'px');
+    cycleScroll = Math.max(240, Math.min(330, window.innerHeight * .30));
+    layout.style.setProperty('--journey-cycle-scroll', cycleScroll + 'px');
+    layout.style.setProperty('--journey-runway-height', (canvasHeight + entries.length * cycleScroll) + 'px');
     var width = visuals.clientWidth;
     entries.forEach(function (entry) {
       // Fit the native canvas once. Masks and every layer share these exact coordinates.
@@ -122,82 +124,50 @@
       return;
     }
     if (!enabled) return;
-    // An upper reading line keeps the first assembly visible after the canvas pins.
-    var focus = stickyTop + canvasHeight * .3;
-    var weights = [], progress = [], desired = [], total = 0, desiredTotal = 0, dominant = 0;
+    // Native scrolling advances a short timeline inside ONE pinned viewport.
+    // No wheel/touch interception: release occurs only after every exit is done.
+    var overall = Math.max(0, (stickyTop - layout.getBoundingClientRect().top) / cycleScroll);
+    var active = Math.min(entries.length - 1, Math.floor(overall));
+    var local = overall >= entries.length ? 1 : overall - active;
     entries.forEach(function (entry, index) {
-      var rect = entry.scene.getBoundingClientRect();
-      // Overlapping 1.5-scene windows keep adjacent graphics visible through handoff.
-      var p = clamp((focus - rect.top + rect.height * .25) / (rect.height * 1.5));
-      // Handoff only overlaps the next chapter's first .08 of progress.
-      // Longer assembly ranges remain independent from this short graphic crossfade.
-      var weight = ramp(0, .08, p) * (1 - ramp(2 / 3, 2 / 3 + .08, p));
-      progress[index] = p;
-      desired[index] = weight;
-      weights[index] = entry.wholeReady ? weight : 0;
-      total += weights[index];
-      desiredTotal += weight;
-      if (weight > desired[dominant]) dominant = index;
-    });
-    // One slow chapter cannot hide all the other loaded illustrations.
-    // Hold the nearest ready illustration until its replacement can paint.
-    if (desiredTotal > 0 && total === 0) {
-      var closest = -1;
-      entries.forEach(function (entry, index) {
-        if (entry.wholeReady && (closest < 0 || Math.abs(index - dominant) < Math.abs(closest - dominant))) closest = index;
-      });
-      if (closest >= 0) { weights[closest] = desiredTotal; total = desiredTotal; }
-    } else if (total > 0 && total < desiredTotal) {
-      weights = weights.map(function (weight) { return weight * desiredTotal / total; });
-      total = desiredTotal;
-    }
-    var normalization = Math.max(1, total);
-    var endRect = layout.getBoundingClientRect();
-    var leaving = ramp(0, canvasHeight * .7, endRect.bottom - stickyTop);
-    var color = [0, 0, 0];
-    entries.forEach(function (entry, index) {
-      var p = progress[index], alpha = weights[index] / normalization * leaving;
-      entry.figure.style.opacity = alpha.toFixed(4);
-      entry.figure.style.visibility = alpha > .0001 ? 'visible' : 'hidden';
+      var p = index === active ? local : index < active ? 1 : 0;
+      var phase = p < .30 ? 'enter' : p < .60 ? 'hold' : p < .92 ? 'exit' : 'clear';
+      var playback = phase === 'enter' ? entry.completeAt * clamp(p / .30)
+        : phase === 'hold' ? entry.completeAt
+        : phase === 'exit' ? entry.completeAt * clamp(1 - (p - .60) / .32) : 0;
+      var on = index === active && phase !== 'clear';
+      var textAlpha = on ? (index === 0 ? 1 : ramp(0, .12, p)) * (1 - ramp(.80, .92, p)) : 0;
+      entry.scene.style.opacity = textAlpha.toFixed(4);
+      entry.scene.style.visibility = textAlpha > .0001 ? 'visible' : 'hidden';
+      entry.scene.setAttribute('aria-hidden', String(!on || textAlpha < .0001));
+      entry.figure.style.opacity = on && entry.wholeReady ? '1' : '0';
+      entry.figure.style.visibility = on && entry.wholeReady ? 'visible' : 'hidden';
       entry.figure.dataset.progress = p.toFixed(5);
-      // Reuse the exact entrance timeline backwards after the reading interval.
-      // The final chapter uses its remaining visible runway so it can finish
-      // fading before the bottom archive action, even in tall viewports.
-      var exit = index === entries.length - 1
-        ? clamp((1.15 - (endRect.bottom - stickyTop) / canvasHeight) / .55)
-        : clamp((p - .56) / (2 / 3 + .08 - .56));
-      var playback = exit > 0 ? Math.min(p, entry.completeAt * (1 - exit)) : p;
       entry.figure.dataset.motionProgress = playback.toFixed(5);
-      entry.figure.dataset.motionPhase = exit > 0 ? 'exit' : p >= entry.completeAt ? 'hold' : 'enter';
+      entry.figure.dataset.motionPhase = phase;
       var complete = playback >= entry.completeAt || !entry.layers.length || !entry.layersReady;
       entry.whole.style.visibility = complete ? 'visible' : 'hidden';
+      // If optional layers fail, the whole illustration still fades out fully.
+      entry.whole.style.opacity = !entry.layersReady ? (on ? ramp(0, .30, p) * (1 - ramp(.60, .92, p)) : 0).toFixed(4) : '1';
       entry.layers.forEach(function (layer) {
         layer.image.style.visibility = complete ? 'hidden' : 'visible';
-        // Keep even hidden endpoints deterministic, without rewriting unchanged states.
         renderLayer(layer, playback);
       });
-      entry.rgb.forEach(function (component, channel) { color[channel] += component * weights[index]; });
     });
-    if (total > .0001) {
-      section.style.setProperty('--journey-tint', 'rgb(' + color.map(function (value) { return Math.round(value / total); }).join(',') + ')');
-    } else {
-      section.style.setProperty('--journey-tint', scenes[progress[0] === 0 ? 0 : scenes.length - 1].dataset.tint);
-    }
-    if (total <= .0001) dominant = progress[0] === 0 ? 0 : entries.length - 1;
-    else dominant = weights.indexOf(Math.max.apply(Math, weights));
-    visuals.dataset.activeChapter = entries[dominant].key;
+    section.style.setProperty('--journey-tint', scenes[active].dataset.tint);
+    visuals.dataset.activeChapter = entries[active].key;
   }
   function schedule() {
     if (!scheduled) { scheduled = true; requestAnimationFrame(update); }
   }
   function reconcile() {
     var visible = viewVisible();
-    var next = desktop.matches && !reduced.matches && visible && entries.some(function (entry) { return entry.wholeReady; });
+    var next = desktop.matches && window.innerHeight >= 520 && !reduced.matches && visible && entries.some(function (entry) { return entry.wholeReady; });
     enabled = next;
     inline = !desktop.matches && !reduced.matches && visible;
     section.classList.toggle('journey-scrubbed', next);
     section.classList.toggle('journey-inline-motion', inline);
-    section.dataset.motionMode = !visible ? 'hidden' : reduced.matches ? 'reduced' : next ? 'desktop' : inline ? 'inline' : 'loading';
+    section.dataset.motionMode = !visible ? 'hidden' : reduced.matches ? 'reduced' : next ? 'desktop' : inline ? 'inline' : entries.some(function (entry) { return entry.wholeReady; }) ? 'static' : 'loading';
     section.dataset.readyScenes = String(entries.filter(function (entry) { return entry.wholeReady; }).length);
     if (!inline) entries.forEach(function (entry) {
       entry.source.style.removeProperty('opacity');
@@ -206,6 +176,11 @@
     if (next) { metrics(); schedule(); }
     else {
       section.style.removeProperty('--journey-tint');
+      entries.forEach(function (entry) {
+        entry.scene.style.removeProperty('opacity');
+        entry.scene.style.removeProperty('visibility');
+        entry.scene.removeAttribute('aria-hidden');
+      });
       if (inline) schedule();
     }
   }
