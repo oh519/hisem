@@ -1,0 +1,184 @@
+/* Curriculum-only overview and schedule. No shared navigation overrides. */
+#v-curriculum .wrap { max-width: 1376px; padding-inline: clamp(24px, 4.5vw, 72px); }
+#v-curriculum .curriculum-top { padding-block: 72px 0; }
+#v-curriculum .curriculum-kicker { margin: 0 0 16px; color: #6683a0; font-size: 11px; letter-spacing: .13em; }
+#v-curriculum .curriculum-summary-head { display: grid; grid-template-columns: 1fr 1fr; align-items: end; gap: 40px; }
+#v-curriculum .curriculum-summary h2 { margin: 0; font-size: clamp(32px, 3.4vw, 46px); color: var(--navy); font-weight: 300; line-height: 1.5; letter-spacing: -.045em; word-break: keep-all; }
+#v-curriculum .curriculum-lead { margin: 0 0 10px; color: #63748a; font-size: 17px; line-height: 1.9; word-break: keep-all; }
+#v-curriculum .curriculum-current { display: grid; grid-template-columns: 1fr 1.1fr; gap: 44px; margin-top: 40px; padding: 32px 0; border-block: 1px solid var(--line); }
+#v-curriculum .curriculum-current h3 { margin: 0 0 12px; color: var(--navy); font-weight: 400; font-size: 23px; }
+#v-curriculum .curriculum-current p:not(.curriculum-kicker) { margin: 0; color: #63748a; font-size: 14px; word-break: keep-all; }
+#v-curriculum .curriculum-method { list-style: none; margin: 0; padding: 0; display: grid; grid-template-columns: repeat(3, 1fr); gap: 20px; align-items: center; }
+#v-curriculum .curriculum-method li { border-left: 1px solid #dce6f0; padding-left: 18px; }
+#v-curriculum .curriculum-method b { display: block; color: var(--navy); font-size: 15px; font-weight: 400; margin-bottom: 8px; }
+#v-curriculum .curriculum-method span { display: block; color: #74859a; font-size: 12px; word-break: keep-all; }
+#v-curriculum .curriculum-calendar { padding-block: 80px 40px; }
+#v-curriculum .calendar-section-head { display: flex; align-items: end; justify-content: space-between; gap: 24px; margin-bottom: 24px; }
+#v-curriculum .calendar-section-head h2 { color: var(--navy); font-size: 28px; font-weight: 400; margin: 0; letter-spacing: -.035em; }
+#v-curriculum .calendar-layout { display: grid; grid-template-columns: minmax(0,2.8fr) minmax(230px,.85fr); gap: 20px; align-items: start; padding: 20px; border: 1px solid #e0e9f2; border-radius: 22px; background: #f4f8fc; }
+#v-curriculum .calendar-month { padding: 28px; min-width: 0; border: 1px solid #e3ebf3; border-radius: 16px; background: #fff; }
+#v-curriculum .calendar-toolbar { display: flex; flex-wrap: wrap; align-items: center; justify-content: space-between; gap: 16px; margin-bottom: 28px; }
+#v-curriculum .calendar-toolbar h3 { margin: 0; font-weight: 400; color: var(--navy); font-size: 26px; line-height: 1.3; letter-spacing: -.035em; }
+#v-curriculum .calendar-controls { display: flex; gap: 8px; margin-left: auto; }
+#v-curriculum .calendar-controls button { min-width: 44px; min-height: 44px; flex-shrink: 0; white-space: nowrap; padding: 8px 12px; border-radius: 50%; font: inherit; font-size: 15px; line-height: 1; border: 1px solid #dce6f0; background: #fff; color: #365c80; cursor: pointer; }
+#v-curriculum .calendar-controls #calendar-today { min-width: 60px; padding-inline: 16px; border-radius: 22px; font-size: 13px; background: #f2f7fc; border-color: #e2ebf4; }
+#v-curriculum .calendar-controls button:hover { background: #e9f3fb; border-color: #bad8ec; }
+#v-curriculum .calendar-controls button:focus-visible, #v-curriculum .calendar-day:focus-visible { outline: 2px solid #4386ad; outline-offset: 3px; }
+#v-curriculum .calendar-table { border-collapse: collapse; width: 100%; table-layout: fixed; }
+#v-curriculum .calendar-table th { padding-bottom: 16px; font-size: 13px; color: #70839a; font-weight: 400; }
+#v-curriculum .calendar-table td { text-align: center; padding: 4px 2px; height: 56px; border-top: 1px solid #eef3f8; }
+#v-curriculum .calendar-day { position: relative; width: 44px; max-width: 100%; min-height: 44px; border: 1px solid transparent; border-radius: 14px; background: none; color: var(--navy); font: inherit; font-size: 16px; font-weight: 400; line-height: 1.35; cursor: pointer; }
+#v-curriculum .calendar-day:hover { background: #edf5fc; }
+#v-curriculum .calendar-table td:first-child .calendar-day { color: #9d5666; }
+#v-curriculum .calendar-table td:last-child .calendar-day { color: #527fa4; }
+#v-curriculum .calendar-day.is-outside { opacity: .36; }
+#v-curriculum .calendar-day[aria-current="date"] { border-color: #91c9e8; background: #f1f8fd; }
+#v-curriculum .calendar-table .calendar-day[aria-pressed="true"] { color: #fff; background: var(--navy); border-color: var(--navy); box-shadow: 0 5px 12px #1427481c; opacity: 1; }
+#v-curriculum .calendar-agenda { align-self: start; padding: 26px 22px; background: #fff; border: 1px solid #e0e8f1; border-radius: 16px; min-width: 0; }
+#v-curriculum .calendar-agenda .curriculum-kicker { font-size: 11px; margin-bottom: 16px; letter-spacing: .1em; }
+#v-curriculum .calendar-agenda h3 { font-size: 20px; font-weight: 400; color: var(--navy); margin: 0 0 22px; padding-bottom: 20px; border-bottom: 1px solid #e8eef5; line-height: 1.55; letter-spacing: -.025em; word-break: keep-all; }
+#v-curriculum .calendar-empty { margin: 0; color: #73859a; font-size: 14px; line-height: 1.8; word-break: keep-all; }
+#v-curriculum .calendar-event-list { list-style: none; padding: 0; margin: 0; }
+#v-curriculum .calendar-event-list li + li { border-top: 1px solid #e5edf5; margin-top: 22px; padding-top: 22px; }
+#v-curriculum .calendar-event-list h4 { color: var(--navy); font-size: 16px; line-height: 1.65; font-weight: 400; margin: 0 0 8px; overflow-wrap: anywhere; }
+#v-curriculum .calendar-event-list p { color: #63748a; font-size: 14px; line-height: 1.8; margin: 0; overflow-wrap: anywhere; }
+#v-curriculum .calendar-event-kind { display: inline-block; margin-bottom: 10px; padding: 4px 8px; border-radius: 6px; background: #eef5fb; color: #476e91; font-size: 11px; line-height: 1.4; letter-spacing: .03em; }
+#v-curriculum .calendar-event-list .calendar-event-period { margin-top: 8px; font-size: 12px; line-height: 1.6; }
+#v-curriculum .calendar-academic-info { margin-top: 16px; padding-inline: 4px; font-size: 12px; line-height: 1.8; color: #6b7f94; }
+#v-curriculum .calendar-source-note { margin: 0; }
+#v-curriculum .calendar-source-note a { color: #476e91; text-underline-offset: 3px; }
+#v-curriculum .calendar-month-notices:not(:empty) { margin-top: 14px; padding: 16px 18px; background: #f3f7fc; border: 1px solid #e5edf5; border-radius: 12px; }
+#v-curriculum .calendar-notices-label { margin: 0 0 6px; color: #526c86; }
+#v-curriculum .calendar-month-notices ul { margin: 0; padding-left: 18px; }
+#v-curriculum .curriculum-topics { padding-block: 72px 32px; background: #fff; }
+#v-curriculum .curriculum-topics-head { margin-bottom: 36px; }
+#v-curriculum .curriculum-topics-head h2 { margin: 0; color: var(--navy); font: 300 clamp(30px, 3.2vw, 44px)/1.5 var(--body); letter-spacing: -.04em; }
+#v-curriculum .curriculum-topic-list { border-top: 1px solid var(--line); }
+#v-curriculum .curriculum-topic { display: grid; grid-template-columns: 40px minmax(200px, .9fr) minmax(0, 1.35fr); align-items: start; gap: 28px; padding: 32px 0; border-bottom: 1px solid var(--line); }
+#v-curriculum .curriculum-topic-number { padding-top: 6px; color: #6683a0; font: 300 13px/1.7 var(--mono); }
+#v-curriculum .curriculum-topic-name h3 { margin: 0; color: var(--navy); font: 400 clamp(22px, 2.2vw, 28px)/1.4 var(--body); letter-spacing: -.025em; }
+#v-curriculum .curriculum-topic-name p { margin: 8px 0 0; color: #6683a0; font-size: 14px; }
+#v-curriculum .curriculum-topic-description > p { margin: 0; color: #5f7289; font-size: 18px; line-height: 1.85; word-break: keep-all; }
+#v-curriculum .curriculum-topic-description .curriculum-topic-tags { margin-top: 14px; color: #476b8d; font-size: 13px; line-height: 1.8; word-break: normal; }
+#v-curriculum .curriculum-archive-cta { display: flex; justify-content: center; padding-block: 24px 52px; border-top: 1px solid #dce5ee; }
+#v-curriculum .curriculum-archive-cta .btn { gap: 28px; }
+@media (max-width: 760px) {
+  #v-curriculum .curriculum-top { padding-top: 44px; }
+  #v-curriculum .curriculum-summary-head, #v-curriculum .curriculum-current { grid-template-columns: 1fr; gap: 24px; }
+  #v-curriculum .curriculum-lead { font-size: 15px; }
+  #v-curriculum .curriculum-current { margin-top: 28px; }
+  #v-curriculum .curriculum-topics { padding-block: 48px 16px; }
+  #v-curriculum .curriculum-topics-head { margin-bottom: 28px; }
+  #v-curriculum .curriculum-topic { grid-template-columns: 28px minmax(0, 1fr); gap: 14px; padding-block: 26px; }
+  #v-curriculum .curriculum-topic-number { padding-top: 4px; }
+  #v-curriculum .curriculum-topic-name h3 { font-size: 24px; }
+  #v-curriculum .curriculum-topic-name p { font-size: 13px; }
+  #v-curriculum .curriculum-topic-description { grid-column: 2; }
+  #v-curriculum .curriculum-topic-description > p { font-size: 16px; }
+  #v-curriculum .curriculum-topic-description .curriculum-topic-tags { font-size: 12px; }
+  #v-curriculum .curriculum-method { gap: 12px; }
+  #v-curriculum .curriculum-method li { padding-left: 12px; }
+  #v-curriculum .curriculum-method b { font-size: 13px; }
+  #v-curriculum .curriculum-method span { font-size: 11px; }
+  #v-curriculum .curriculum-calendar { padding-top: 56px; }
+  #v-curriculum .calendar-section-head { align-items: start; flex-direction: column; gap: 12px; }
+  #v-curriculum .calendar-layout { grid-template-columns: 1fr; gap: 0; padding: 0; border-radius: 20px; background: #fff; overflow: hidden; }
+  #v-curriculum .calendar-month { padding: 22px 10px 18px; border: 0; border-radius: 0; }
+  #v-curriculum .calendar-toolbar { padding-inline: 6px; gap: 12px; margin-bottom: 22px; }
+  #v-curriculum .calendar-toolbar h3 { font-size: 22px; }
+  #v-curriculum .calendar-agenda { margin: 0 12px 12px; padding: 22px 18px; background: #f5f9fd; }
+  #v-curriculum .calendar-agenda h3 { font-size: 19px; margin-bottom: 18px; padding-bottom: 16px; }
+  #v-curriculum .calendar-table th { font-size: 12px; }
+  #v-curriculum .calendar-table td { padding: 3px 0; height: 52px; }
+  #v-curriculum .calendar-day { font-size: 14px; border-radius: 12px; }
+}
+@media (max-width: 480px) {
+  #v-curriculum .curriculum-method { grid-template-columns: 1fr; gap: 18px; }
+  #v-curriculum .curriculum-method li { display: flex; align-items: baseline; gap: 16px; }
+  #v-curriculum .curriculum-method b { min-width: 88px; margin-bottom: 0; }
+}
+@media (max-width: 400px) {
+  #v-curriculum .calendar-toolbar { flex-wrap: wrap; }
+  #v-curriculum .calendar-toolbar h3 { flex: 1 0 100%; white-space: nowrap; }
+  #v-curriculum .calendar-controls { margin-left: auto; }
+}
+
+/* Month view: dates and continuous event lanes share the same seven columns. */
+#v-curriculum .calendar-layout { grid-template-columns: minmax(0, 1fr) 260px; gap: 16px; padding: 16px; }
+#v-curriculum .calendar-month { padding: 24px 18px 18px; }
+#v-curriculum .calendar-toolbar { padding-inline: 6px; margin-bottom: 18px; }
+#v-curriculum .calendar-legend { display: flex; flex-wrap: wrap; gap: 8px; margin: 0 6px 20px; font-size: 12px; }
+#v-curriculum .calendar-legend span { padding: 4px 10px; border-radius: 6px; }
+#v-curriculum .legend-academic { color: #294b70; background: #e6eff9; }
+#v-curriculum .legend-study { color: #fff; background: #1f4266; }
+#v-curriculum .legend-holiday { color: #a03347; background: #fbe9ed; }
+#v-curriculum .calendar-weekdays, #v-curriculum .calendar-week-dates { display: grid; grid-template-columns: repeat(7,minmax(0,1fr)); }
+#v-curriculum .calendar-weekdays { text-align: center; color: #73859a; font-size: 13px; padding-bottom: 12px; }
+#v-curriculum .calendar-weekdays span:first-child { color: #ad3b4d; }
+#v-curriculum .calendar-weekdays span:last-child { color: #527fa4; }
+#v-curriculum .calendar-week { min-height: 104px; padding: 4px 0 12px; border-top: 1px solid #e6edf4; background: repeating-linear-gradient(to right, transparent 0, transparent calc(100% / 7 - 1px), #edf2f7 calc(100% / 7 - 1px), #edf2f7 calc(100% / 7)); }
+#v-curriculum .calendar-week-dates { margin-bottom: 4px; }
+#v-curriculum .calendar-grid .calendar-day { width: 44px; max-width: 100%; justify-self: center; height: 44px; padding: 0; border-radius: 10px; font-size: 14px; }
+#v-curriculum .calendar-day.is-saturday { color: #527fa4; }
+#v-curriculum .calendar-day.is-sunday, #v-curriculum .calendar-day.is-holiday { color: #ad3b4d; }
+#v-curriculum .calendar-grid .calendar-day[aria-pressed="true"] { color: #fff; background: var(--navy); opacity: 1; box-shadow: none; }
+#v-curriculum .calendar-week-events { display: grid; grid-template-columns: repeat(7,minmax(0,1fr)); gap: 4px 0; align-items: start; }
+#v-curriculum .calendar-event-bar { display: block; min-width: 0; min-height: 30px; margin-inline: 2px; padding: 5px 7px; border: 0; border-radius: 6px; text-align: left; font: 400 12px/1.6 var(--body); cursor: pointer; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+#v-curriculum .event-academic { background: #e6eff9; color: #294b70; }
+#v-curriculum .event-study { background: #1f4266; color: #fff; }
+#v-curriculum .event-holiday { background: #fbe9ed; color: #a03347; }
+#v-curriculum .calendar-event-bar.continues-before { border-top-left-radius: 0; border-bottom-left-radius: 0; }
+#v-curriculum .calendar-event-bar.continues-after { border-top-right-radius: 0; border-bottom-right-radius: 0; }
+#v-curriculum .calendar-event-bar:hover { filter: brightness(.95); }
+#v-curriculum .calendar-event-bar:focus-visible { outline: 2px solid #337da3; outline-offset: -2px; }
+#v-curriculum .calendar-hint { margin: 18px 6px 0; color: #6b7f94; font-size: 12px; line-height: 1.7; }
+#v-curriculum .calendar-holiday-source { margin: 6px 0 0; }
+#v-curriculum .calendar-holiday-source a { color: #476e91; text-underline-offset: 3px; }
+#v-curriculum .calendar-sync-status { position: absolute; width: 1px; height: 1px; padding: 0; margin: -1px; overflow: hidden; clip-path: inset(50%); white-space: nowrap; }
+@media (min-width: 761px) {
+  #v-curriculum .curriculum-calendar { padding-block: 44px 24px; }
+  #v-curriculum .calendar-section-head { margin-bottom: 16px; }
+  #v-curriculum .calendar-section-head .curriculum-kicker { margin-bottom: 8px; }
+  #v-curriculum .calendar-section-head h2 { font-size: 26px; }
+  #v-curriculum .calendar-layout { padding: 12px; gap: 12px; grid-template-columns: minmax(0,1fr) 240px; }
+  #v-curriculum .calendar-month { padding: 16px 14px 12px; }
+  #v-curriculum .calendar-toolbar { margin-bottom: 10px; gap: 10px; }
+  #v-curriculum .calendar-toolbar h3 { font-size: 23px; }
+  #v-curriculum .calendar-legend { margin-bottom: 10px; font-size: 11px; }
+  #v-curriculum .calendar-legend span { padding: 3px 8px; }
+  #v-curriculum .calendar-weekdays { padding-bottom: 8px; font-size: 12px; }
+  #v-curriculum .calendar-week { min-height: 72px; padding: 2px 0 6px; }
+  #v-curriculum .calendar-week-dates { margin-bottom: 2px; }
+  #v-curriculum .calendar-grid .calendar-day { width: 32px; height: 32px; min-height: 32px; border-radius: 8px; font-size: 13px; }
+  #v-curriculum .calendar-week-events { row-gap: 3px; }
+  #v-curriculum .calendar-event-bar { min-height: 22px; padding: 2px 6px; font-size: 12px; line-height: 18px; }
+  #v-curriculum .calendar-hint { margin-top: 10px; font-size: 11px; }
+  #v-curriculum .calendar-agenda { padding: 18px 16px; }
+  #v-curriculum .calendar-agenda h3 { font-size: 18px; margin-bottom: 14px; padding-bottom: 12px; }
+  #v-curriculum .calendar-agenda .curriculum-kicker { margin-bottom: 10px; }
+  #v-curriculum .calendar-event-list h4 { font-size: 14px; line-height: 1.6; }
+  #v-curriculum .calendar-event-list li + li { margin-top: 14px; padding-top: 14px; }
+}
+@media (max-width: 1050px) { #v-curriculum .calendar-layout { grid-template-columns: minmax(0,1fr); } }
+@media (max-width: 760px) {
+  #v-curriculum .curriculum-calendar { margin-inline: -16px; }
+  #v-curriculum .calendar-layout { padding: 0; gap: 0; }
+  #v-curriculum .calendar-month { padding: 16px 6px 12px; }
+  #v-curriculum .calendar-toolbar h3 { font-size: 22px; }
+  #v-curriculum .calendar-legend { margin-bottom: 10px; font-size: 11px; gap: 6px; }
+  #v-curriculum .calendar-grid .calendar-day { font-size: 13px; }
+  #v-curriculum .calendar-event-bar { min-height: 44px; padding: 12px 4px; font-size: 11px; line-height: 20px; margin-inline: 1px; }
+  #v-curriculum .calendar-week { min-height: 62px; padding-bottom: 4px; }
+  #v-curriculum .calendar-toolbar { margin-bottom: 12px; }
+  #v-curriculum .calendar-hint { margin-top: 10px; font-size: 11px; }
+  #v-curriculum .calendar-section-head { margin-bottom: 16px; }
+  #v-curriculum .calendar-section-head .curriculum-kicker { margin-bottom: 8px; }
+  #v-curriculum .calendar-section-head h2 { font-size: 24px; }
+  #v-curriculum .calendar-agenda { padding: 12px 14px; margin: 0 10px 10px; }
+  #v-curriculum .calendar-agenda .curriculum-kicker { display: none; }
+  #v-curriculum .calendar-agenda h3 { font-size: 15px; line-height: 1.5; margin-bottom: 8px; padding-bottom: 8px; }
+  #v-curriculum .calendar-event-kind { margin: 0 8px 0 0; font-size: 10px; padding: 3px 6px; }
+  #v-curriculum .calendar-event-list h4 { display: inline; font-size: 14px; line-height: 1.6; }
+  #v-curriculum .calendar-event-list li + li { margin-top: 10px; padding-top: 10px; }
+  #v-curriculum .event-study { padding-inline: 2px; font-size: 10px; }
+}

@@ -1,0 +1,8 @@
+# Keep downloadable files byte-for-byte intact across Windows and macOS checkouts.
+*.pdf binary
+*.ppt binary
+*.pptx binary
+*.wasm binary
+*.bcmap binary
+*.pfb binary
+*.ttf binary

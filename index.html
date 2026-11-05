@@ -349,6 +349,17 @@ footer { border-top: 1px solid var(--line); padding-block: 56px 32px; }
 @media (max-width: 960px) { .foot-grid { grid-template-columns: 1fr; } .foot-nav { grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 28px 24px; } }
 @media (max-width: 520px) { .foot-nav { grid-template-columns: repeat(2, minmax(0, 1fr)); } }
 </style>
+<link rel="stylesheet" href="archive.css?v=rounded-20261106-1">
+<link rel="stylesheet" href="home-refinement.css?v=white-study-20261106-1">
+<link rel="stylesheet" href="curriculum.css?v=white-study-20261106-1">
+<script src="archive-data.js" defer></script>
+<script src="archive-preview.js" defer></script>
+<script src="archive.js" defer></script>
+<script src="home-refinement.js" defer></script>
+<script src="curriculum-data.js?v=kickoff-20261106-1" defer></script>
+<script src="data/academic-calendar-fallback.js?v=20261106-1" defer></script>
+<script src="data/kr-holidays.js?v=20261106-1" defer></script>
+<script src="curriculum-calendar.js?v=compact-20261106-1" defer></script>
 
 <header class="site-header">
   <div class="wrap nav">
@@ -376,42 +387,43 @@ footer { border-top: 1px solid var(--line); padding-block: 56px 32px; }
   <section class="view" id="v-home" data-view="home">
     <div class="hero">
       <div class="wrap hero-grid">
-        <div>
-          <p class="eyebrow"><span>Hongik Univ.</span><span>Semiconductor Society</span><span>Est. 2026</span></p>
-          <h1>Small Scale, Big <mark>Impact</mark></h1>
-          <p class="lede"><strong>작은 소자, 큰 변화.</strong> 소재의 언어로 반도체를 공부하는 홍익대학교 신소재공학과 반도체 학술 동아리, HISEM입니다.</p>
+        <div class="hero-copy">
+          <p class="eyebrow"><span>HISEM</span><span>Hongik University</span></p>
+          <h1><span class="hero-small">Small scale.</span><span class="hero-big">Big <strong>impact.</strong></span></h1>
+          <p class="lede">홍익대학교 신소재공학과 반도체 학술 동아리.<br>공정의 원리를 공부하고, 배움을 기록합니다.</p>
           <div class="btns">
-            <a class="btn primary" href="#introduction">학회 소개</a>
-            <a class="btn ghost" href="#recruitment">Join Us</a>
+            <a class="btn primary" href="#introduction">학회 소개 <span aria-hidden="true">↗</span></a>
+            <a class="btn ghost" href="#recruitment">모집 안내</a>
           </div>
         </div>
         <div class="wafer-wrap">
-          <div class="chip" id="chip" role="img" aria-label="회로 패턴이 새겨진 다이가 격자로 배열된 3D 실리콘 웨이퍼. 마우스를 올린 다이가 들려 올라옵니다."><span class="chip-hint">Hover a Die</span></div>
+          <div class="chip" id="chip" role="img" aria-label="회로 패턴이 새겨진 다이가 격자로 배열된 3D 실리콘 웨이퍼. 마우스를 올린 다이가 들려 올라옵니다."><img class="wafer-fallback" src="assets/wafer-fallback.svg" alt="" aria-hidden="true"><span class="chip-hint">Hover a Die</span></div>
           <div class="wafer-cap"><span>Si (100) · Ø300 mm</span><span id="chip-layer">— dies</span></div>
         </div>
       </div>
+      <div class="wrap hero-bottom"><span>작은 소자에서 시작되는 큰 가능성</span><button type="button" id="home-explore">Explore HISEM <span aria-hidden="true">↓</span></button></div>
     </div>
     <div class="stats-band">
       <div class="wrap stats">
-        <div class="stat"><b data-count="2026" data-from="2000">2026</b><span>Founded</span></div>
-        <div class="stat"><b data-count="12">12</b><span>Members</span></div>
-        <div class="stat"><b data-count="4">4</b><span>Study Tracks</span></div>
-        <div class="stat"><b>MSE</b><span>Hongik Univ.</span></div>
+        <div class="stat"><b>2026</b><span>설립</span></div>
+        <div class="stat"><b>12</b><span>학회원</span></div>
+        <div class="stat"><b>4</b><span>스터디 팀</span></div>
+        <div class="stat"><b>MSE</b><span>신소재공학과</span></div>
       </div>
     </div>
 
-    <div class="home-sec">
+    <div class="home-sec home-study" id="home-study">
       <div class="wrap">
-        <div class="sec-head reveal">
+        <div class="sec-head">
           <p class="sec-no">01 / What We Study</p>
           <h2>소재에서 출발해<br>칩까지 공부합니다</h2>
           <a class="sec-more" href="#curriculum">Curriculum →</a>
         </div>
         <div class="tracks">
-        <a class="track reveal" href="#curriculum"><span class="t-no">01</span><svg viewBox="0 0 36 36" fill="none" stroke="currentColor" stroke-width="1.4" aria-hidden="true"><path d="M6 12l12-6 12 6-12 6z"/><path d="M6 12v12l12 6 12-6V12"/><path d="M18 18v12"/><circle cx="18" cy="6" r="1.6" fill="currentColor"/><circle cx="6" cy="12" r="1.6" fill="currentColor"/><circle cx="30" cy="12" r="1.6" fill="currentColor"/><circle cx="18" cy="18" r="1.6" fill="currentColor"/></svg><h3>Materials &amp; Physics</h3><p>결정 구조, 에너지 밴드, 도핑처럼 반도체를 이루는 소재와 물성의 기초를 다집니다.</p><span class="t-tags">Crystal · Band Gap · Doping</span></a>
-        <a class="track reveal" href="#curriculum"><span class="t-no">02</span><svg viewBox="0 0 36 36" fill="none" stroke="currentColor" stroke-width="1.4" aria-hidden="true"><path d="M5 26l13 6 13-6"/><path d="M5 20l13 6 13-6"/><path d="M5 14l13 6 13-6-13-6z"/><path d="M18 2v6M15 5l3 3 3-3"/></svg><h3>Process</h3><p>산화, 포토, 식각, 증착부터 금속 배선과 패키징까지 칩이 만들어지는 8대 공정을 따라갑니다.</p><span class="t-tags">Litho · Etch · Deposition</span></a>
-        <a class="track reveal" href="#curriculum"><span class="t-no">03</span><svg viewBox="0 0 36 36" fill="none" stroke="currentColor" stroke-width="1.4" aria-hidden="true"><rect x="4" y="22" width="28" height="8" rx="1"/><rect x="13" y="10" width="10" height="12" rx="1"/><path d="M8 22v-6M28 22v-6M18 10V5"/><path d="M8 16h-2M28 16h2"/></svg><h3>Devices</h3><p>MOSFET에서 FinFET, GAA까지 트랜지스터 구조와 DRAM, NAND 메모리의 동작 원리를 공부합니다.</p><span class="t-tags">MOSFET · FinFET · Memory</span></a>
-        <a class="track reveal" href="#curriculum"><span class="t-no">04</span><svg viewBox="0 0 36 36" fill="none" stroke="currentColor" stroke-width="1.4" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M4 30h28"/><path d="M6 25l7-7 6 4 11-12"/><path d="M24 10h6v6"/></svg><h3>Industry &amp; Trends</h3><p>HBM, 첨단 패키징, 차세대 소재 등 산업의 흐름을 읽고 소재 관점에서 정리합니다.</p><span class="t-tags">HBM · Packaging · Roadmap</span></a>
+        <a class="track" href="#curriculum"><span class="t-no">01</span><svg viewBox="0 0 36 36" fill="none" stroke="currentColor" stroke-width="1.4" aria-hidden="true"><path d="M6 12l12-6 12 6-12 6z"/><path d="M6 12v12l12 6 12-6V12"/><path d="M18 18v12"/><circle cx="18" cy="6" r="1.6" fill="currentColor"/><circle cx="6" cy="12" r="1.6" fill="currentColor"/><circle cx="30" cy="12" r="1.6" fill="currentColor"/><circle cx="18" cy="18" r="1.6" fill="currentColor"/></svg><h3>Materials &amp; Physics</h3><p>결정 구조와 에너지 밴드, 도핑으로 소재의 기초를 다집니다.</p><span class="t-tags">Crystal · Band Gap · Doping</span></a>
+        <a class="track" href="#curriculum"><span class="t-no">02</span><svg viewBox="0 0 36 36" fill="none" stroke="currentColor" stroke-width="1.4" aria-hidden="true"><path d="M5 26l13 6 13-6"/><path d="M5 20l13 6 13-6"/><path d="M5 14l13 6 13-6-13-6z"/><path d="M18 2v6M15 5l3 3 3-3"/></svg><h3>Process</h3><p>다섯 가지 핵심 공정의 원리와 연결을 공부합니다.</p><span class="t-tags">Litho · Etch · Deposition</span></a>
+        <a class="track" href="#curriculum"><span class="t-no">03</span><svg viewBox="0 0 36 36" fill="none" stroke="currentColor" stroke-width="1.4" aria-hidden="true"><rect x="4" y="22" width="28" height="8" rx="1"/><rect x="13" y="10" width="10" height="12" rx="1"/><path d="M8 22v-6M28 22v-6M18 10V5"/><path d="M8 16h-2M28 16h2"/></svg><h3>Devices</h3><p>트랜지스터와 메모리의 구조·동작을 살펴봅니다.</p><span class="t-tags">MOSFET · FinFET · Memory</span></a>
+        <a class="track" href="#curriculum"><span class="t-no">04</span><svg viewBox="0 0 36 36" fill="none" stroke="currentColor" stroke-width="1.4" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M4 30h28"/><path d="M6 25l7-7 6 4 11-12"/><path d="M24 10h6v6"/></svg><h3>Industry &amp; Trends</h3><p>HBM, 패키징, 차세대 소재의 흐름을 읽습니다.</p><span class="t-tags">HBM · Packaging · Roadmap</span></a>
         </div>
       </div>
     </div>
@@ -432,13 +444,13 @@ footer { border-top: 1px solid var(--line); padding-block: 56px 32px; }
       <div class="wrap">
         <div class="join join-home reveal">
           <div>
-            <p class="sec-no">Join HISEM</p>
-            <h3>함께 공부할 2기 멤버를 기다립니다</h3>
-            <p>모집 일정과 지원 방법은 확정되는 대로 공지합니다. 궁금한 점은 언제든 메일로 문의해 주세요.</p>
+            <p class="sec-no">HISEM Archive</p>
+            <h3>배움을 기록으로 남깁니다.</h3>
+            <p>공정 스터디의 발표 자료와 학습 보고서를 기록합니다.</p>
           </div>
           <div class="btns">
-            <a class="btn" href="#recruitment">모집 안내</a>
-            <a class="btn line" href="#contact">Contact</a>
+            <a class="btn" href="#activity">활동 기록 보기 <span aria-hidden="true">↗</span></a>
+            <a class="btn line" href="#contact">문의하기</a>
           </div>
         </div>
       </div>
@@ -449,6 +461,7 @@ footer { border-top: 1px solid var(--line); padding-block: 56px 32px; }
   <section class="view" data-view="introduction" hidden>
     <div class="page-body"><div class="wrap">
       <p class="lead">홍익대학교 신소재공학과 반도체 학술 동아리</p>
+      <p class="intro-concept">HISEM은 반도체 공정을 팀별로 공부하고, 서로의 발표를 통해 공정의 원리와 연결을 함께 이해하는 학술 소모임입니다. 학습 보고서와 발표 자료를 아카이브에 남겨 배움을 이어갑니다.</p>
       <dl class="facts">
         <div class="fact"><dt>Name</dt><dd>HISEM <span class="status">가칭</span></dd></div>
         <div class="fact"><dt>Founded</dt><dd>2026</dd></div>
@@ -467,42 +480,86 @@ footer { border-top: 1px solid var(--line); padding-block: 56px 32px; }
   </section>
 
   <!-- ACTIVITIES -->
-  <section class="view" data-view="curriculum" hidden>
-    <div class="page-body"><div class="wrap">
-      <div class="placeholder">
-        <div class="ph-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><path d="M4 5h16v14H4z"/><path d="M8 9h8M8 13h5"/></svg></div>
-        <div><h3>학기 커리큘럼 <span class="status">준비 중</span></h3><p>스터디 트랙, 세미나 일정 등 학기별 커리큘럼을 정리하고 있습니다.</p></div>
-      </div>
+  <section class="view" id="v-curriculum" data-view="curriculum" hidden>
+    <div class="page-body curriculum-top"><div class="wrap">
+      <section class="curriculum-summary" aria-labelledby="curriculum-summary-title">
+        <div class="curriculum-summary-head">
+          <div><p class="curriculum-kicker">LEARN · SHARE · ARCHIVE</p><h2 id="curriculum-summary-title">함께 공부하고,<br>배움을 기록합니다.</h2></div>
+          <p class="curriculum-lead">소재의 기초에서 공정, 소자, 산업 동향까지.<br>반도체를 이루는 원리와 연결을 공부합니다.</p>
+        </div>
+        <div class="curriculum-current">
+          <div><p class="curriculum-kicker">PROCESS STUDY</p><h3>현재 공정 스터디</h3><p>포토·식각 / 확산 / 박막 / C&amp;C 네 팀으로 나누어 학습합니다.</p></div>
+          <ol class="curriculum-method"><li><b>팀별 학습</b><span>담당 분야의 원리 정리</span></li><li><b>전체 공유 발표</b><span>서로의 학습 내용 이해</span></li><li><b>자료 아카이빙</b><span>학습 보고서·발표 자료 기록</span></li></ol>
+        </div>
+      </section>
+      <section class="curriculum-topics" aria-labelledby="curriculum-topics-title">
+        <header class="curriculum-topics-head"><p class="curriculum-kicker">WHAT WE STUDY</p><h2 id="curriculum-topics-title">소재에서 출발해<br>칩까지 공부합니다</h2></header>
+        <div class="curriculum-topic-list">
+          <article class="curriculum-topic" aria-labelledby="curriculum-topic-1">
+            <span class="curriculum-topic-number">01</span>
+            <div class="curriculum-topic-name"><h3 id="curriculum-topic-1" lang="en">Materials &amp; Physics</h3><p>소재·물성</p></div>
+            <div class="curriculum-topic-description"><p>결정 구조, 에너지 밴드, 도핑처럼 반도체를 이루는 소재와 물성의 기초를 다집니다.</p><p class="curriculum-topic-tags" lang="en">Crystal · Band Gap · Doping</p></div>
+          </article>
+          <article class="curriculum-topic" aria-labelledby="curriculum-topic-2">
+            <span class="curriculum-topic-number">02</span>
+            <div class="curriculum-topic-name"><h3 id="curriculum-topic-2" lang="en">Process</h3><p>반도체 공정</p></div>
+            <div class="curriculum-topic-description"><p>포토·식각·확산·박막·세정·평탄화의 원리와 공정 간 연결을 공부합니다. 실제 제조에서는 여러 공정이 반복·조합됩니다.</p><p class="curriculum-topic-tags" lang="en">Photo · Etch · Diffusion · Thin Film · C&amp;C</p></div>
+          </article>
+          <article class="curriculum-topic" aria-labelledby="curriculum-topic-3">
+            <span class="curriculum-topic-number">03</span>
+            <div class="curriculum-topic-name"><h3 id="curriculum-topic-3" lang="en">Devices</h3><p>반도체 소자</p></div>
+            <div class="curriculum-topic-description"><p>MOSFET에서 FinFET, GAA까지 트랜지스터 구조와 DRAM, NAND 메모리의 동작 원리를 공부합니다.</p><p class="curriculum-topic-tags" lang="en">MOSFET · FinFET · Memory</p></div>
+          </article>
+          <article class="curriculum-topic" aria-labelledby="curriculum-topic-4">
+            <span class="curriculum-topic-number">04</span>
+            <div class="curriculum-topic-name"><h3 id="curriculum-topic-4" lang="en">Industry &amp; Trends</h3><p>산업·기술 동향</p></div>
+            <div class="curriculum-topic-description"><p>HBM, 첨단 패키징, 차세대 소재 등 산업의 흐름을 읽고 소재 관점에서 정리합니다.</p><p class="curriculum-topic-tags" lang="en">HBM · Packaging · Roadmap</p></div>
+          </article>
+        </div>
+      </section>
+      <section class="curriculum-calendar" aria-labelledby="curriculum-calendar-title">
+        <header class="calendar-section-head"><div><p class="curriculum-kicker">STUDY CALENDAR</p><h2 id="curriculum-calendar-title">활동 캘린더</h2></div></header>
+        <div class="calendar-layout">
+          <div class="calendar-month">
+            <div class="calendar-toolbar"><h3 id="calendar-month-title" aria-live="polite"></h3><div class="calendar-controls"><button type="button" id="calendar-prev" aria-label="이전 달">←</button><button type="button" id="calendar-today">오늘</button><button type="button" id="calendar-next" aria-label="다음 달">→</button></div></div>
+            <div class="calendar-legend" aria-label="일정 구분"><span class="legend-academic">학사일정</span><span class="legend-study">학회 일정</span><span class="legend-holiday">공휴일</span></div>
+            <div class="calendar-weekdays" aria-hidden="true"><span>일</span><span>월</span><span>화</span><span>수</span><span>목</span><span>금</span><span>토</span></div>
+            <div id="calendar-days" class="calendar-grid" role="group" aria-labelledby="calendar-month-title"></div>
+            <p class="calendar-hint">일정 막대를 누르면 전체 이름과 기간을 볼 수 있습니다.</p>
+          </div>
+          <aside class="calendar-agenda" aria-labelledby="calendar-selected-title"><p class="curriculum-kicker">SELECTED DAY</p><h3 id="calendar-selected-title" aria-live="polite"></h3><div id="calendar-events" aria-live="polite"></div></aside>
+        </div>
+        <noscript><p>캘린더를 보려면 JavaScript를 켜주세요.</p></noscript>
+      </section>
+      <div class="curriculum-archive-cta"><a class="btn primary" href="#activity">활동 기록 보기 <span aria-hidden="true">↗</span></a></div>
     </div></div>
   </section>
 
   <!-- ARCHIVE -->
   <section class="view" data-view="activity" hidden>
     <div class="page-body"><div class="wrap">
-      <p class="lead">정기 스터디, 세미나, 학회 행사 기록이 이곳에 쌓입니다.</p>
-      <div class="cards">
-        <article class="card">
-          <span class="sample-badge">예시 카드</span>
-          <div class="meta"><span>2026.11</span><span class="tag">Seminar</span></div>
-          <h4>활동 제목이 들어갑니다</h4>
-          <p>날짜, 활동 유형, 한두 줄 요약, 사진을 함께 올릴 수 있습니다.</p>
-        </article>
-      </div>
+      <section class="activity-overview" aria-labelledby="study-overview-title">
+        <h2 id="study-overview-title">공정 스터디 기록</h2>
+        <ul class="study-fields" aria-label="공정 분야"><li>포토</li><li>식각</li><li>확산</li><li>박막</li><li>C&amp;C</li></ul>
+        <p class="activity-caption">발표 자료 및 학습 보고서</p>
+        <a class="btn primary" href="#publication">보고서·발표자료 보기 <span aria-hidden="true">↗</span></a>
+      </section>
     </div></div>
   </section>
 
   <section class="view" data-view="publication" hidden>
-    <div class="page-body"><div class="wrap">
-      <p class="lead">학기마다 발간하는 HISEM Report를 PDF로 공개합니다.</p>
-      <div class="cards">
-        <article class="card">
-          <span class="sample-badge">예시 카드</span>
-          <div class="meta"><span>HISEM Report No.01</span><span class="tag">공정</span></div>
-          <h4>보고서 제목이 들어갑니다</h4>
-          <p>분야 태그와 작성자, 발간 학기를 표시하고 PDF로 연결합니다.</p>
-          <div class="foot"><span>작성자</span><span>2027-1학기 · PDF</span></div>
-        </article>
+    <div class="page-body"><div class="wrap" id="material-archive">
+      <div id="archive-list-view">
+        <div class="archive-intro">
+          <h2>발표 자료 및 학습 보고서</h2>
+          <p>공정 스터디의 발표 자료 및 학습 보고서를 모으는 공간입니다.</p>
+        </div>
+        <div id="archive-topics" class="archive-topics"></div>
+        <p id="archive-empty" class="archive-empty">아직 등록된 자료가 없습니다.</p>
+        <a class="archive-back" href="#activity">활동 기록으로 <span aria-hidden="true">↗</span></a>
       </div>
+      <div id="archive-detail-view" hidden></div>
+      <noscript><p>자료를 보려면 JavaScript를 켜주세요.</p></noscript>
     </div></div>
   </section>
 
@@ -620,7 +677,7 @@ footer { border-top: 1px solid var(--line); padding-block: 56px 32px; }
   var SITE = [
     { label: 'About', items: [['introduction', 'Introduction'], ['professor', 'Professor']] },
     { label: 'Programs', items: [['curriculum', 'Curriculum']] },
-    { label: 'Archive', items: [['activity', 'Activities'], ['publication', 'Publication'], ['contest', 'Competitions'], ['external', 'External Activities']] },
+    { label: 'Archive', items: [['activity', '활동 기록'], ['contest', 'Competitions'], ['external', 'External Activities']] },
     { label: 'Members', items: [['member', 'Member'], ['alumni', 'Alumni']] },
     { label: 'Join Us', items: [['recruitment', 'Recruitment'], ['contact', 'Contact']] }
   ];
@@ -639,6 +696,9 @@ footer { border-top: 1px solid var(--line); padding-block: 56px 32px; }
     menu.appendChild(li);
   });
 
+  // Materials are reached through the activity page, not global menus.
+  lookup.publication = { section: SITE[2], title: '보고서·발표자료', index: 2 };
+
   // Footer: same site map as the top menu
   var footNav = document.getElementById('foot-nav');
   if (footNav) footNav.innerHTML = SITE.map(function (sec) {
@@ -655,7 +715,7 @@ footer { border-top: 1px solid var(--line); padding-block: 56px 32px; }
     var head = document.createElement('div');
     head.className = 'page-head';
     var tabs = info.section.items.map(function (it) {
-      return '<a href="#' + it[0] + '"' + (it[0] === id ? ' class="current" aria-current="page"' : '') + '>' + it[1] + '</a>';
+      return '<a href="#' + it[0] + '"' + (it[0] === (id === 'publication' ? 'activity' : id) ? ' class="current" aria-current="page"' : '') + '>' + it[1] + '</a>';
     }).join('');
     head.innerHTML = '<div class="wrap"><p class="crumb"><span>Home</span><span>' + info.section.label + '</span><span>' + info.title + '</span></p><h1>' + info.title + '</h1><nav class="subtabs" aria-label="' + info.section.label + ' 하위 메뉴">' + tabs + '</nav></div>';
     view.insertBefore(head, view.firstChild);
@@ -686,10 +746,11 @@ footer { border-top: 1px solid var(--line); padding-block: 56px 32px; }
   var views = Array.prototype.slice.call(document.querySelectorAll('.view'));
   function route() {
     var id = (location.hash || '').slice(1);
+    if (id.indexOf('publication/') === 0) id = 'publication';
     if (!lookup[id]) id = 'home';
     views.forEach(function (v) { v.hidden = v.getAttribute('data-view') !== id; });
     menu.querySelectorAll('.drop a').forEach(function (a) {
-      var on = a.getAttribute('data-id') === id;
+      var on = a.getAttribute('data-id') === (id === 'publication' ? 'activity' : id);
       a.classList.toggle('current', on);
       if (on) a.setAttribute('aria-current', 'page'); else a.removeAttribute('aria-current');
     });
@@ -700,6 +761,11 @@ footer { border-top: 1px solid var(--line); padding-block: 56px 32px; }
     document.title = id === 'home' ? 'HISEM' : lookup[id].title + ' · HISEM';
   }
   window.addEventListener('hashchange', route);
+  // Selecting the current page must also close the mobile menu and reenter it.
+  menu.addEventListener('click', function (event) {
+    var link = event.target.closest('.drop a');
+    if (link && link.getAttribute('href') === location.hash) route();
+  });
   route();
 
 })();
@@ -776,12 +842,23 @@ footer { border-top: 1px solid var(--line); padding-block: 56px 32px; }
   try { var renderer = new T.WebGLRenderer({ antialias: true, alpha: true }); } catch (e) { return; }
   renderer.setPixelRatio(Math.min(window.devicePixelRatio || 1, 2));
   renderer.outputEncoding = T.sRGBEncoding;
+  renderer.toneMapping = T.ACESFilmicToneMapping; renderer.toneMappingExposure = .98;
   box.insertBefore(renderer.domElement, box.firstChild);
 
   var scene = new T.Scene();
   var camera = new T.PerspectiveCamera(30, 1, .1, 100);
   camera.position.set(0, 13.6, 15.4); camera.lookAt(0, -.6, 0);
-  scene.add(new T.HemisphereLight(0xffffff, 0xC9D6EA, .9));
+  scene.add(new T.HemisphereLight(0xffffff, 0xC9D6EA, 1.1));
+  // Soft studio reflections give the silicon edge and patterned surface depth.
+  var envCanvas = document.createElement('canvas'); envCanvas.width = 512; envCanvas.height = 256;
+  var envContext = envCanvas.getContext('2d');
+  var envGradient = envContext.createLinearGradient(0, 0, 0, 256);
+  envGradient.addColorStop(0, '#c7dbed'); envGradient.addColorStop(.32, '#ffffff'); envGradient.addColorStop(.52, '#8c9caf'); envGradient.addColorStop(.7, '#23374f'); envGradient.addColorStop(1, '#c7d6e5');
+  envContext.fillStyle = envGradient; envContext.fillRect(0, 0, 512, 256);
+  envContext.fillStyle = '#ffffff'; envContext.fillRect(90, 24, 24, 140); envContext.fillRect(330, 36, 48, 100);
+  var envTexture = new T.CanvasTexture(envCanvas); envTexture.mapping = T.EquirectangularReflectionMapping; envTexture.encoding = T.sRGBEncoding;
+  var pmrem = new T.PMREMGenerator(renderer), environment = pmrem.fromEquirectangular(envTexture);
+  scene.environment = environment.texture; envTexture.dispose(); pmrem.dispose();
   var key = new T.DirectionalLight(0xffffff, .9); key.position.set(-6, 12, 6); scene.add(key);
   var ice = new T.PointLight(0x7FD0F5, .9, 30); ice.position.set(6, 4, -4); scene.add(ice);
 
@@ -865,8 +942,8 @@ footer { border-top: 1px solid var(--line); padding-block: 56px 32px; }
   var geo = new T.ExtrudeGeometry(shape, { depth: TH, bevelEnabled: true, bevelThickness: .02, bevelSize: .03, bevelSegments: 3, curveSegments: 160 });
   geo.rotateX(-Math.PI / 2); geo.translate(0, -TH, 0);
   var waferMats = [
-    new T.MeshStandardMaterial({ map: tex, roughness: .32, metalness: .18 }),
-    new T.MeshStandardMaterial({ color: 0xC5CFDD, roughness: .3, metalness: .55 })
+    new T.MeshStandardMaterial({ map: tex, roughness: .24, metalness: .28 }),
+    new T.MeshStandardMaterial({ color: 0xC5CFDD, roughness: .18, metalness: .72 })
   ];
   var root = new T.Group(); scene.add(root);
   var wafer = new T.Mesh(geo, waferMats); root.add(wafer);
@@ -950,7 +1027,7 @@ footer { border-top: 1px solid var(--line); padding-block: 56px 32px; }
     var e = reduce ? 1 : .07;
     cur.x += (target.x - cur.x) * e; cur.y += (target.y - cur.y) * e;
     var hit = inside ? pickDie() : pinned;
-    if (!reduce && !hit) cur.spin += dt * .06;
+    if (!reduce && !hit) cur.spin += dt * .018;
     root.rotation.set(cur.x, cur.y + cur.spin, 0);
 
     // scan line: chord of the disc at the current position
@@ -968,10 +1045,11 @@ footer { border-top: 1px solid var(--line); padding-block: 56px 32px; }
     tile.visible = !!picked;
     if (picked) {
       cur.lift += (1 - cur.lift) * (reduce ? 1 : .12);
-      tile.position.y = .04 + cur.lift * 1.5; tile.rotation.y = (1 - cur.lift) * .5; tile.scale.set(1 + cur.lift * 1.1, 1 + cur.lift * .6, 1 + cur.lift * 1.1);
+      tile.position.y = .04 + cur.lift * .65; tile.rotation.y = (1 - cur.lift) * .5; tile.scale.set(1 + cur.lift * .25, 1 + cur.lift * .2, 1 + cur.lift * .25);
       slot.material.opacity = .85 * cur.lift;
     } else slot.material.opacity *= .85;
     renderer.render(scene, camera);
+    box.classList.add('webgl-ready');
   }
   requestAnimationFrame(frame);
 })();
