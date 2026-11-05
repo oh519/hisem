@@ -10,7 +10,7 @@
   var desktop = window.matchMedia('(min-width: 901px)');
   var reduced = window.matchMedia('(prefers-reduced-motion: reduce)');
   var definitions = window.HISEM_STUDY_LAYERS || {};
-  var scheduled = false, enabled = false, inline = false, stickyTop = 93, canvasHeight = 700, cycleScroll = 270;
+  var scheduled = false, enabled = false, inline = false, stickyTop = 93, canvasHeight = 700, cycleScroll = 1125;
   var clamp = function (value) { return Math.max(0, Math.min(1, value)); };
   function ramp(start, end, value) {
     if (end <= start) return value >= end ? 1 : 0;
@@ -85,7 +85,9 @@
     canvasHeight = Math.max(180, Math.min(850, window.innerHeight - stickyTop - 28));
     layout.style.setProperty('--journey-stage-top', stickyTop + 'px');
     layout.style.setProperty('--journey-canvas-height', canvasHeight + 'px');
-    cycleScroll = Math.max(240, Math.min(330, window.innerHeight * .30));
+    // Give a wheel notch only a small part of a chapter. The stage stays pinned,
+    // so this adds reading time rather than an empty gap between illustrations.
+    cycleScroll = Math.max(960, Math.min(1440, window.innerHeight * 1.25));
     layout.style.setProperty('--journey-cycle-scroll', cycleScroll + 'px');
     layout.style.setProperty('--journey-runway-height', (canvasHeight + entries.length * cycleScroll) + 'px');
     var width = visuals.clientWidth;
@@ -124,19 +126,19 @@
       return;
     }
     if (!enabled) return;
-    // Native scrolling advances a short timeline inside ONE pinned viewport.
+    // Native scrolling advances a measured timeline inside ONE pinned viewport.
     // No wheel/touch interception: release occurs only after every exit is done.
     var overall = Math.max(0, (stickyTop - layout.getBoundingClientRect().top) / cycleScroll);
     var active = Math.min(entries.length - 1, Math.floor(overall));
     var local = overall >= entries.length ? 1 : overall - active;
     entries.forEach(function (entry, index) {
       var p = index === active ? local : index < active ? 1 : 0;
-      var phase = p < .30 ? 'enter' : p < .60 ? 'hold' : p < .92 ? 'exit' : 'clear';
+      var phase = p < .30 ? 'enter' : p < .68 ? 'hold' : p < .97 ? 'exit' : 'clear';
       var playback = phase === 'enter' ? entry.completeAt * clamp(p / .30)
         : phase === 'hold' ? entry.completeAt
-        : phase === 'exit' ? entry.completeAt * clamp(1 - (p - .60) / .32) : 0;
+        : phase === 'exit' ? entry.completeAt * clamp(1 - (p - .68) / .29) : 0;
       var on = index === active && phase !== 'clear';
-      var textAlpha = on ? (index === 0 ? 1 : ramp(0, .12, p)) * (1 - ramp(.80, .92, p)) : 0;
+      var textAlpha = on ? (index === 0 ? 1 : ramp(0, .12, p)) * (1 - ramp(.82, .97, p)) : 0;
       entry.scene.style.opacity = textAlpha.toFixed(4);
       entry.scene.style.visibility = textAlpha > .0001 ? 'visible' : 'hidden';
       entry.scene.setAttribute('aria-hidden', String(!on || textAlpha < .0001));
@@ -148,7 +150,7 @@
       var complete = playback >= entry.completeAt || !entry.layers.length || !entry.layersReady;
       entry.whole.style.visibility = complete ? 'visible' : 'hidden';
       // If optional layers fail, the whole illustration still fades out fully.
-      entry.whole.style.opacity = !entry.layersReady ? (on ? ramp(0, .30, p) * (1 - ramp(.60, .92, p)) : 0).toFixed(4) : '1';
+      entry.whole.style.opacity = !entry.layersReady ? (on ? ramp(0, .30, p) * (1 - ramp(.68, .97, p)) : 0).toFixed(4) : '1';
       entry.layers.forEach(function (layer) {
         layer.image.style.visibility = complete ? 'hidden' : 'visible';
         renderLayer(layer, playback);

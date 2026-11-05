@@ -106,7 +106,7 @@ test('one pinned stage holds text and art while every chapter finishes its exit'
       assert.equal(app.copies[index].getBoundingClientRect().top, expectedTop + 50);
       assert.equal(app.scenes[index].attrs['aria-hidden'], 'false');
     }
-    app.move(app.at(index, .96));
+    app.move(app.at(index, .985));
     assert.equal(app.state()[index].phase, 'clear');
     assert.ok(app.state().every(item => Number(item.opacity) === 0), 'clear interval must precede the next illustration');
   }
@@ -115,14 +115,39 @@ test('one pinned stage holds text and art while every chapter finishes its exit'
   assert.ok(app.state().every(item => Number(item.opacity) === 0));
 });
 
-test('chapter intervals are less than half the old spacing without intercepting scrolling', async () => {
-  const app = await renderer();
-  const cycle = parseFloat(app.layout.style['--journey-cycle-scroll']);
-  const canvas = parseFloat(app.layout.style['--journey-canvas-height']);
-  assert.ok(cycle >= 240 && cycle <= 330 && cycle < 872 / 2);
-  assert.equal(parseFloat(app.layout.style['--journey-runway-height']), canvas + cycle * 4);
+test('chapter distance leaves a substantial reading hold without intercepting scrolling', async () => {
+  for (const height of [560, 900, 1080, 1440]) {
+    const app = await renderer({ height });
+    const cycle = app.at(1, .45) - app.at(0, .45);
+    const canvas = parseFloat(app.layout.style['--journey-canvas-height']);
+    assert.ok(cycle >= 960 && cycle <= 1440, 'one chapter must not pass in a small scroll gesture');
+    assert.ok((.68 - .30) * cycle >= 360, 'the complete-art reading hold needs at least three 120px wheel increments');
+    assert.equal(parseFloat(app.layout.style['--journey-runway-height']), canvas + cycle * 4);
+  }
   const source = fs.readFileSync(path.join(__dirname, '..', 'study-scenes.js'), 'utf8');
   assert.doesNotMatch(source, /preventDefault\s*\(|addEventListener\s*\(\s*['"](?:wheel|touchmove)['"]|\bscrollTo\s*\(/);
+});
+
+test('one 120px wheel tick in the reading hold keeps the completed chapter in place', async () => {
+  for (const height of [560, 900, 1080]) {
+    const app = await renderer({ height });
+    const stageTop = parseFloat(app.layout.style['--journey-stage-top']);
+    for (let index = 0; index < 4; index++) {
+      const start = app.at(index, .45);
+      app.move(start);
+      const complete = app.state()[index].layers;
+      assert.equal(app.state()[index].phase, 'hold');
+      app.move(start + 120);
+      const current = app.state();
+      assert.equal(current[index].phase, 'hold', 'a single wheel tick must not trigger exit or the next chapter');
+      assert.equal(Number(current[index].opacity), 1);
+      assert.deepEqual(current[index].layers, complete, 'completed artwork must remain assembled while reading');
+      assert.equal(app.stage.getBoundingClientRect().top, stageTop);
+      assert.equal(app.copies[index].getBoundingClientRect().top, stageTop + 50);
+      assert.equal(app.scenes[index].attrs['aria-hidden'], 'false');
+      assert.ok(current.every((item, other) => other === index || Number(item.opacity) === 0));
+    }
+  }
 });
 
 test('each exit matches the actual entrance in reverse and holds without a clock', async () => {
@@ -130,21 +155,21 @@ test('each exit matches the actual entrance in reverse and holds without a clock
   for (let index = 0; index < 4; index++) {
     app.move(app.at(index, .15));
     const entrance = app.state()[index].layers;
-    app.move(app.at(index, .76));
+    app.move(app.at(index, .825));
     assert.equal(app.state()[index].phase, 'exit');
     assert.deepEqual(app.state()[index].layers, entrance, 'halfway exit must equal halfway entrance');
     const stopped = app.state();
     await new Promise(resolve => setImmediate(resolve));
     assert.deepEqual(app.state(), stopped);
     assert.equal(app.frames.length, 0);
-    app.move(app.at(index, .98)); app.move(app.at(index, .76));
+    app.move(app.at(index, .985)); app.move(app.at(index, .825));
     assert.deepEqual(app.state(), stopped, 'same scroll position must restore every exact layer state');
   }
 });
 
 test('chapter handoff never overlaps illustrations, including fast scroll and reverse jumps', async () => {
   const app = await renderer();
-  const positions = [0.2, 0.7, 0.91, 0.96, 1.04, 1.5, 1.9, 2.4, 3.7, 4.1, 3.45, 1.2, .82];
+  const positions = [0.2, 0.7, 0.91, 0.96, 0.985, 1.04, 1.5, 1.9, 2.4, 3.7, 4.1, 3.45, 1.2, .82];
   for (const position of positions) {
     app.move(app.at(0, position));
     const states = app.state();
