@@ -16,4 +16,13 @@
 - PC1440×900·1920×1080에서 고정 위치, 단일 그림, 퇴장 후 전환 확인. 모바일390×844·320×740에서 가로 넘침 없음과 캘린더 이동 확인.
 - 실제12월15일의 두 기간 일정과 출처/확인 날짜 표시 확인. 새 소개 문구와 메인 본문/키워드의 실제17/13px 적용 확인.
 - 캡처: ../archive-review/academic-calendar-ui.jpg, introduction-concept.jpg, pinned-process-1920.jpg.
-- 실제 휴대폰·Safari·OS 움직임 줄이기 설정 변경은 직접 확인하지 않았다. 기본 브랜치에는 사용자가 별도로 승인한 일정 워크플로 하나만 등록하며 화면 수정은 합치지 않는다.
+- 실제 휴대폰·Safari·OS 움직임 줄이기 설정 변경은 직접 확인하지 않았다. 움직임 줄이기는 자동 검사로 확인했다.
+
+## 업로드·자동 갱신
+
+- 화면 변경은 `b8ef986`으로 `feature/archive-study-materials`에 올렸다. 기존 원격 `archive-&-curriculum` 브랜치는 `b9ecacc` 그대로 보존했다.
+- 사용자 승인에 따라 main에는 `.github/workflows/academic-calendar.yml` 한 파일만 `4e484d8`로 추가했다. 화면 코드는 합치지 않았다.
+- 최초 자동 실행 https://github.com/oh519/hisem/actions/runs/42010672245 는 성공했고, 작업 브랜치에 일정 데이터만 갱신한 `43b2d4f`가 생겼다.
+- 매일 한국 시간 오전 7시 37분 예약이며 GitHub 실행 상황에 따라 지연될 수 있다. 갱신 대상은 작업 브랜치의 `data/academic-calendar.json`뿐이다.
+- 공유 미리보기에서 일정 출처·실제 데이터와 고정 공정 장면, 그림 로딩을 확인했다. 캡처는 `../archive-review/shared-curriculum-review.jpg`다.
+- 검토용 고정 주소: https://raw.githack.com/oh519/hisem/43b2d4fe1b4fdaa874af00cf4c3f7a05a6c3f8b5/index.html#curriculum . 이 주소는 현재 검토 버전을 고정하며 이후 일정 갱신은 브랜치 주소에 반영된다.
